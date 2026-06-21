@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: promptwerker-website
+    runtime: docker
+    dockerfilePath: ./docker/Dockerfile
+    dockerContext: .
+    plan: starter
+    region: frankfurt
+    healthCheckPath: /wp-login.php
+    envVars:
+      - key: WORDPRESS_URL
+        sync: false
+      - key: WORDPRESS_TITLE
+        value: promptwerker
+      - key: WORDPRESS_ADMIN_USER
+        sync: false
+      - key: WORDPRESS_ADMIN_PASSWORD
+        sync: false
+      - key: WORDPRESS_ADMIN_EMAIL
+        sync: false
+      - key: WORDPRESS_DB_HOST
+        sync: false
+      - key: WORDPRESS_DB_USER
+        sync: false
+      - key: WORDPRESS_DB_PASSWORD
+        sync: false
+      - key: WORDPRESS_DB_NAME
+        sync: false
