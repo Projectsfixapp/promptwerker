@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>promptwerker: Design-Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./js/vendor/three/build/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="#top"><img src="assets/promptwerker-logo.png" alt="promptwerker"></a>
+      <nav>
+        <a href="#services">Leistungen</a>
+        <a href="#use-cases">Use Cases</a>
+        <a href="#about">Über uns</a>
+        <a class="btn btn-primary" href="#kontakt">Analysegespräch</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <canvas id="hero-scene" aria-hidden="true"></canvas>
+      <div class="hero-overlay" aria-hidden="true"></div>
+      <div class="container">
+        <span class="eyebrow">KI-Beratung für den Mittelstand</span>
+        <h1>Wo künstliche Intelligenz<br>echten Mehrwert schafft.</h1>
+        <p class="lede">
+          Voice-Agenten am Telefon, automatisierte Workflows, Leads im Autopilot:
+          Wir bauen die KI-Systeme, die Ihr Unternehmen tatsächlich entlastet.
+          Keine Theorie, sondern ein fertiges System in Wochen statt Monaten.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#kontakt">Kostenloses Analysegespräch buchen</a>
+          <a class="btn btn-secondary" href="#use-cases">Use Cases ansehen</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-stub" id="problem">
+      <div class="container">
+        <div class="card">
+          <h2>Problem-Section</h2>
+          <p>Platzhalter. Inhalt folgt in Phase 3.</p>
+          <a class="btn btn-primary" href="#kontakt">Mehr erfahren</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-stub" id="services">
+      <div class="container">
+        <div class="card">
+          <h2>Services-Section</h2>
+          <p>Platzhalter: Voice-Agenten, Workflow-Automatisierung, Lead/Sales-Autopilot, CRM-Anbindung.</p>
+          <a class="btn btn-primary" href="#kontakt">Mehr erfahren</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-stub" id="use-cases">
+      <div class="container">
+        <div class="card">
+          <h2>Use-Cases-Section</h2>
+          <p>Platzhalter: Praxisbeispiele. Inhalt folgt in Phase 3.</p>
+          <a class="btn btn-primary" href="#kontakt">Mehr erfahren</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-stub" id="about">
+      <div class="container">
+        <div class="card">
+          <h2>About-Section</h2>
+          <p>Platzhalter. Inhalt folgt in Phase 3.</p>
+          <a class="btn btn-primary" href="#kontakt">Mehr erfahren</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-stub" id="kontakt">
+      <div class="container">
+        <div class="card">
+          <h2>Kontakt</h2>
+          <p>Platzhalter. Inhalt folgt in Phase 3.</p>
+          <a class="btn btn-primary" href="#top">Nach oben</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/hero-scene.js"></script>
+  <script>
+    (function () {
+      const header = document.querySelector(".site-header");
+      if (!header) return;
+      const update = () => header.classList.toggle("is-scrolled", window.scrollY > 80);
+      update();
+      window.addEventListener("scroll", update, { passive: true });
+    })();
+  </script>
+</body>
+</html>

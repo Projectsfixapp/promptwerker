@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #060b18;
+  --color-bg-elevated: #0a1226;
+  --color-ink: #f3f6fc;
+  --color-body: #aab6cf;
+  --color-muted: #6c7894;
+  --color-accent: #38d9ff;
+  --color-accent-ink: #0a1226;
+
+  --font-heading: var(--font-disket), "Courier New", monospace;
+  --font-body: var(--font-plex), -apple-system, sans-serif;
+  --font-card-body: var(--font-archivo), -apple-system, sans-serif;
+}
+
+:root {
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-trace-dim: 70, 140, 255;
+  --color-pulse: 56, 217, 255;
+
+  --color-glass-bg: rgba(180, 200, 235, 0.16);
+  --color-glass-border: rgba(255, 255, 255, 0.45);
+
+  --leading-tight: 1.15;
+  --leading-normal: 1.6;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  line-height: var(--leading-tight);
+  letter-spacing: 0.01em;
+}
+
+.glass-panel {
+  @apply backdrop-blur-2xl backdrop-saturate-150;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.26),
+    var(--color-glass-bg) 55%,
+    rgba(255, 255, 255, 0.1)
+  );
+  border: 1.5px solid var(--color-glass-border);
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 0 40px rgba(255, 255, 255, 0.06);
+}
+
+.scroll-hide {
+  scrollbar-width: none;
+}
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+}

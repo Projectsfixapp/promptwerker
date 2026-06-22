@@ -4,3 +4,6 @@ node_modules/
 wp-content/uploads/
 .env
 .env.local
+.qa-tools/node_modules/
+.qa-tools/*.png
+.impeccable/
