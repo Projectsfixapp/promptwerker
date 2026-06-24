@@ -32,7 +32,7 @@ export default function MainView({
           </p>
           <p className="mt-6 text-base leading-relaxed text-body">
             Voice-Agenten am Telefon, automatisierte Workflows, Leads im Autopilot: Wir bauen die
-            KI-Systeme, die Ihr Unternehmen tatsächlich entlastet. Keine Theorie, sondern ein
+            KI-Systeme, die dein Unternehmen tatsächlich entlastet. Keine Theorie, sondern ein
             fertiges System in Wochen statt Monaten.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">

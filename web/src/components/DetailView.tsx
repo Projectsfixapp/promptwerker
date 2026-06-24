@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
+import type { Variants } from "motion/react";
 import type { Topic } from "@/lib/topics";
 import BackButton from "./BackButton";
 
-const contentVariants = {
+const contentVariants: Variants = {
   hidden: { opacity: 0, y: 14 },
   show: (i: number) => ({
     opacity: 1,
@@ -70,7 +71,7 @@ export default function DetailView({
           </div>
 
           <motion.a
-            href="#kontakt"
+            href={`/seite/${topic.id}`}
             custom={2 + topic.detail.length}
             initial="hidden"
             animate="show"

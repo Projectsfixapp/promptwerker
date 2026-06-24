@@ -18,13 +18,13 @@ export const bottomCards: BottomCard[] = [
   {
     id: "strategie-roadmap",
     title: "Strategie & Roadmap",
-    blurb: "Klarer Fahrplan statt Buzzword-Bingo: Welche KI-Schritte sich für Ihr Unternehmen wirklich lohnen.",
+    blurb: "Klarer Fahrplan statt Buzzword-Bingo: Welche KI-Schritte sich für dein Unternehmen wirklich lohnen.",
     enabled: true,
   },
   {
     id: "rag-systeme",
     title: "RAG-Systeme",
-    blurb: "Ihr Unternehmenswissen als durchsuchbare KI-Wissensbasis — präzise Antworten statt Halluzinationen.",
+    blurb: "Dein Unternehmenswissen als durchsuchbare KI-Wissensbasis — präzise Antworten statt Halluzinationen.",
     enabled: true,
   },
   {
@@ -36,7 +36,7 @@ export const bottomCards: BottomCard[] = [
   {
     id: "schulungen-fachvortraege",
     title: "Schulungen & Fachvorträge",
-    blurb: "Ihr Team lernt, KI-Werkzeuge sicher und sinnvoll im Arbeitsalltag einzusetzen.",
+    blurb: "Dein Team lernt, KI-Werkzeuge sicher und sinnvoll im Arbeitsalltag einzusetzen.",
     enabled: true,
   },
   {

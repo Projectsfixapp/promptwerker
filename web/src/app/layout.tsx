@@ -29,7 +29,7 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   title: "promptwerker — KI-Beratung für den Mittelstand",
   description:
-    "Voice-Agenten am Telefon, automatisierte Workflows, Leads im Autopilot: Wir bauen die KI-Systeme, die Ihr Unternehmen tatsächlich entlastet.",
+    "Voice-Agenten am Telefon, automatisierte Workflows, Leads im Autopilot: Wir bauen die KI-Systeme, die dein Unternehmen tatsächlich entlastet.",
 };
 
 export default function RootLayout({

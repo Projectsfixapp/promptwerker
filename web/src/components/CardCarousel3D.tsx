@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, type PanInfo } from "motion/react";
 import type { BottomCard } from "@/lib/bottomCards";
 
@@ -17,6 +18,7 @@ function circularOffset(i: number, active: number, n: number) {
 }
 
 export default function CardCarousel3D({ cards }: { cards: BottomCard[] }) {
+  const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const n = cards.length;
@@ -36,9 +38,14 @@ export default function CardCarousel3D({ cards }: { cards: BottomCard[] }) {
   }
 
   function handleDragEnd(_: unknown, info: PanInfo) {
-    const threshold = 80;
-    if (info.offset.x < -threshold) goTo(activeIndex + 1);
-    else if (info.offset.x > threshold) goTo(activeIndex - 1);
+    const distanceThreshold = 50;
+    const velocityThreshold = 400;
+    const flickLeft =
+      info.offset.x < -distanceThreshold || info.velocity.x < -velocityThreshold;
+    const flickRight =
+      info.offset.x > distanceThreshold || info.velocity.x > velocityThreshold;
+    if (flickLeft) goTo(activeIndex + 1);
+    else if (flickRight) goTo(activeIndex - 1);
     setPaused(false);
   }
 
@@ -59,7 +66,7 @@ export default function CardCarousel3D({ cards }: { cards: BottomCard[] }) {
         <motion.div
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.2}
+          dragElastic={0.7}
           onDragStart={() => setPaused(true)}
           onDragEnd={handleDragEnd}
           className="relative h-full w-full cursor-grab active:cursor-grabbing"
@@ -77,7 +84,9 @@ export default function CardCarousel3D({ cards }: { cards: BottomCard[] }) {
                 style={{ transformStyle: "preserve-3d" }}
               >
                 <motion.div
-                  onClick={() => !isActive && goTo(i)}
+                  onClick={() =>
+                    isActive ? router.push(`/seite/${card.id}`) : goTo(i)
+                  }
                   animate={{
                     x: offset * SPREAD,
                     z: -abs * DEPTH,
@@ -86,10 +95,10 @@ export default function CardCarousel3D({ cards }: { cards: BottomCard[] }) {
                     opacity: 1 - abs * 0.13,
                   }}
                   transition={{ type: "spring", stiffness: 200, damping: 26 }}
-                  className={`glass-panel w-80 rounded-2xl p-7 sm:w-96 ${
+                  className={`glass-panel w-80 cursor-pointer rounded-2xl p-7 sm:w-96 ${
                     isActive
-                      ? "cursor-default border-accent/70 shadow-[0_0_60px_16px_rgba(56,217,255,0.35)]"
-                      : "cursor-pointer"
+                      ? "border-accent/70 shadow-[0_0_60px_16px_rgba(56,217,255,0.35)]"
+                      : ""
                   }`}
                 >
                   <h3 className="text-lg">{card.title}</h3>

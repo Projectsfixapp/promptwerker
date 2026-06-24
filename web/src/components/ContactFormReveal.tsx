@@ -39,7 +39,7 @@ export default function ContactFormReveal({
         </button>
 
         {sent ? (
-          <p className="text-base text-ink">Danke! Wir melden uns zeitnah bei Ihnen.</p>
+          <p className="text-base text-ink">Danke! Wir melden uns zeitnah bei dir.</p>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <h3 className="text-xl">Kostenloses Analysegespräch</h3>
