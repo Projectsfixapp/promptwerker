@@ -1,0 +1,40 @@
+# Eigener Compose-Stack für promptwerker.de.
+#
+# Bewusst NICHT in die MitFrauSchmidt-Compose-Datei aufgenommen: dort läuft
+# die Telefonie, und ein `docker compose up` auf diesem Stack würde dort
+# Container neu erzeugen und laufende Anrufe abreißen lassen. Stattdessen
+# hängt sich dieser Container nur in dasselbe Docker-Netz ein, damit der
+# vorhandene Caddy ihn unter dem Namen `promptwerker` erreicht.
+
+services:
+  promptwerker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    image: promptwerker-web:latest
+    container_name: promptwerker
+    restart: unless-stopped
+    environment:
+      # Kontaktformular. Fehlen die Werte, meldet /api/kontakt sauber
+      # "SMTP_NICHT_KONFIGURIERT" und das Formular zeigt den mailto-Weg.
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      KONTAKT_EMPFAENGER: ${KONTAKT_EMPFAENGER:-}
+      # Terminbuchung. Ohne diese Werte zeigt das Buchungsfenster den
+      # E-Mail-Ersatzweg (siehe web/KALENDER-SETUP.md).
+      GOOGLE_CALENDAR_CLIENT_ID: ${GOOGLE_CALENDAR_CLIENT_ID:-}
+      GOOGLE_CALENDAR_CLIENT_SECRET: ${GOOGLE_CALENDAR_CLIENT_SECRET:-}
+      GOOGLE_CALENDAR_REFRESH_TOKEN: ${GOOGLE_CALENDAR_REFRESH_TOKEN:-}
+      GOOGLE_CALENDAR_ID: ${GOOGLE_CALENDAR_ID:-}
+    networks:
+      - mitfrauschmidt_default
+    # Kein Port nach außen: der Zugang läuft ausschließlich über Caddy.
+    expose:
+      - "3000"
+
+networks:
+  mitfrauschmidt_default:
+    external: true
