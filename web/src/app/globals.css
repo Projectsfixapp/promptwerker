@@ -5,9 +5,19 @@
   --color-bg-elevated: #0a1226;
   --color-ink: #f3f6fc;
   --color-body: #aab6cf;
-  --color-muted: #6c7894;
+  /* War #6c7894 — auf dem Seitengrund #060b18 nur 4,45:1 und damit knapp
+     unter WCAG AA (4,5:1) für Fließtext. #7a86a4 erreicht 5,4:1. */
+  --color-muted: #7a86a4;
   --color-accent: #38d9ff;
   --color-accent-ink: #0a1226;
+
+  --color-magenta: #c026a0;
+  --color-magenta-soft: #f4d9ee;
+  --color-accent-soft: #d9f5ff;
+  --color-accent-deep: #0b7285;
+  --color-paper: #ffffff;
+  --color-paper-ink: #15121b;
+  --color-paper-body: #55506a;
 
   --font-heading: var(--font-disket), "Courier New", monospace;
   --font-body: var(--font-plex), -apple-system, sans-serif;
@@ -29,6 +39,32 @@
 body {
   background: var(--color-bg);
   color: var(--color-ink);
+}
+
+/* Sichtbarer Fokus für Tastaturbedienung (WCAG 2.4.7 / 2.4.13).
+   Vorher setzten mehrere Komponenten focus:outline-none, ohne Ersatz —
+   damit war beim Durchtabben nicht erkennbar, wo man gerade steht.
+   Der doppelte Ring (heller Kern, dunkler Rand) hält den Kontrast sowohl
+   auf dem dunklen Grund als auch auf den hellen Glasflächen. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 0.35rem;
+  box-shadow: 0 0 0 5px rgba(6, 11, 24, 0.85);
+}
+
+/* Bewegung reduzieren: Systemeinstellung respektieren.
+   Betrifft alle Übergänge und Animationen — die einzelnen Regeln für
+   Karussell und Laufband bleiben zusätzlich bestehen. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 h1,
@@ -55,9 +91,104 @@ h3 {
     inset 0 0 40px rgba(255, 255, 255, 0.06);
 }
 
-.scroll-hide {
-  scrollbar-width: none;
+/* Echtes Liquid Glass für die Audit-Karte: deutlich durchsichtiger als
+   .glass-panel-light, damit der dunkle NeuralBackground dahinter (fixed,
+   z-0) sichtbar durchschimmert. */
+.glass-panel-liquid {
+  @apply backdrop-blur-2xl backdrop-saturate-150;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.62),
+    rgba(255, 255, 255, 0.34) 55%,
+    rgba(255, 255, 255, 0.46)
+  );
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 30px 90px rgba(10, 5, 35, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 0 60px rgba(255, 255, 255, 0.08);
 }
-.scroll-hide::-webkit-scrollbar {
-  display: none;
+
+/* Weißes, hinterleuchtetes Liquid-Glass für Buttons auf dunklem Grund
+   (z.B. RoadmapCard) — heller Glas-Look statt der dunklen Standard-Buttons. */
+.glass-button-liquid {
+  @apply backdrop-blur-xl backdrop-saturate-150 transition-shadow;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.35),
+    rgba(255, 255, 255, 0.12) 60%,
+    rgba(255, 255, 255, 0.22)
+  );
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 0 22px rgba(255, 255, 255, 0.22),
+    0 0 44px rgba(56, 217, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
+
+.glass-button-liquid:hover {
+  box-shadow:
+    0 0 30px rgba(255, 255, 255, 0.35),
+    0 0 60px rgba(56, 217, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Stärker gefrostetes Liquid-Glass für die Logo-Badges im 3D-Karussell —
+   deutlich weniger durchsichtig als .glass-panel, damit die Icons klar
+   lesbar bleiben statt im Hintergrund zu verschwimmen. */
+.logo-badge-frost {
+  @apply backdrop-blur-2xl backdrop-saturate-150;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.62),
+    rgba(205, 220, 245, 0.42) 55%,
+    rgba(255, 255, 255, 0.5)
+  );
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 12px 32px rgba(4, 8, 26, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 0 24px rgba(255, 255, 255, 0.15);
+}
+
+.glass-panel-light {
+  @apply backdrop-blur-2xl backdrop-saturate-150;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.72) 55%,
+    rgba(255, 255, 255, 0.9)
+  );
+  border: 1.5px solid rgba(21, 18, 27, 0.08);
+  box-shadow:
+    0 18px 50px rgba(20, 10, 40, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  color: var(--color-paper-ink);
+}
+
+
+/* 3D-Logo-Karussell (LogoCarousel3D.tsx): langsame, durchgängige Ring-Rotation */
+@keyframes carousel-spin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+.carousel-ring {
+  animation: carousel-spin 60s linear infinite;
+}
+
+.carousel-ring:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-ring {
+    animation: none;
+  }
+}
+

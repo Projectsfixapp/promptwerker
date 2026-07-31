@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 
 export default function Logo() {
@@ -11,11 +12,13 @@ export default function Logo() {
       style={{ scale }}
       className="fixed left-6 top-6 z-40 origin-top-left sm:left-10 sm:top-8"
     >
-      <img
-        src="/logo-promptwerker.png"
-        alt="promptwerker"
-        className="h-auto w-[300px] sm:w-[440px]"
-      />
+      <Link href="/" aria-label="Zur Startseite">
+        <img
+          src="/logo-promptwerker.png"
+          alt="promptwerker"
+          className="h-auto w-[300px] sm:w-[440px]"
+        />
+      </Link>
     </motion.div>
   );
 }

@@ -71,7 +71,7 @@ export default function DetailView({
           </div>
 
           <motion.a
-            href={`/seite/${topic.id}`}
+            href={`/leistungen/${topic.id}`}
             custom={2 + topic.detail.length}
             initial="hidden"
             animate="show"

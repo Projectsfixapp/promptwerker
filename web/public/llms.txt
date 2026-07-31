@@ -1,0 +1,39 @@
+# promptwerker
+
+> promptwerker baut KI-Systeme für den Mittelstand, die im Alltag wirklich laufen: Voice-Agenten am Telefon, Workflow-Automatisierung, Lead-/Sales-Autopilot und CRM-Anbindung (SAP, Salesforce, HubSpot und weitere). Kein Pilotprojekt, sondern ein fertiges, an den echten Betrieb angepasstes System.
+
+Einzelunternehmen von Dennis Beichert (better than e-commerce D. Beichert), Sitz in Hünfelden, Hessen (Deutschland). Zielgruppe: kleine und mittelständische Unternehmen im deutschsprachigen Raum. Kontakt: kontakt@promptwerker.de, Telefon 06438 9016836.
+
+## Leistungen
+
+- [Voice-Agenten](https://promptwerker.de/leistungen/voice-agenten): KI-Telefonagenten, die Anrufe annehmen, Standardfragen klären und Termine direkt im Kalender buchen.
+- [Workflow-Automatisierung](https://promptwerker.de/leistungen/workflow-automatisierung): Direkte API-Anbindungen zwischen bestehenden Tools statt brüchiger No-Code-Ketten.
+- [Lead-/Sales-Autopilot](https://promptwerker.de/leistungen/lead-sales-autopilot): Automatisierte Lead-Erfassung, -Bewertung und -Weiterleitung an das Vertriebsteam.
+- [CRM-Anbindung](https://promptwerker.de/leistungen/crm-anbindung): Integration mit SAP, Salesforce, HubSpot und weiteren CRM-Systemen.
+- [DSGVO & EU AI Act](https://promptwerker.de/leistungen/dsgvo-ai-act): Umsetzung von KI-Vorhaben entlang der Anforderungen von DSGVO und Verordnung (EU) 2024/1689.
+- [Strategie & Roadmap](https://promptwerker.de/leistungen/strategie-roadmap): Priorisierte Einführungsplanung statt Einzelexperimente.
+- [RAG-Systeme](https://promptwerker.de/leistungen/rag-systeme): Wissensbasierte Assistenten, die auf den eigenen Dokumenten antworten.
+- [Implementierung & Lösungen](https://promptwerker.de/leistungen/implementierung-loesungen): Umsetzung bis in den Produktivbetrieb.
+- [Schulungen & Fachvorträge](https://promptwerker.de/leistungen/schulungen-fachvortraege): Kompetenzaufbau im Team, auch mit Blick auf Art. 4 EU AI Act.
+- [Use Cases](https://promptwerker.de/leistungen/use-cases): Anwendungsfälle aus echten Kundenprojekten.
+- [Workshop: Roadmap im Selbststudium](https://promptwerker.de/leistungen/workshop-roadmap): Video-Workshop für 99 €.
+
+## Über
+
+- [Über uns](https://promptwerker.de/ueber-uns): Wer promptwerker ist und wie an echten Fällen aus dem Kundenbetrieb gearbeitet wird.
+
+## Rechtliches und Transparenz
+
+- [Impressum](https://promptwerker.de/impressum): Anbieterkennzeichnung nach § 5 DDG.
+- [Datenschutzerklärung](https://promptwerker.de/datenschutz): Hosting in Deutschland, keine Cookies, kein Tracking; getrennt nach Website-Besuch und Kundenprojekten.
+- [AGB](https://promptwerker.de/agb): Bedingungen für Beratung, Entwicklung und Betrieb — ausschließlich B2B nach § 14 BGB.
+- [Auftragsverarbeitung (AVV)](https://promptwerker.de/avv): Rollenverteilung nach Art. 28 DSGVO, technische und organisatorische Maßnahmen, Unterauftragnehmer mit Verarbeitungsort.
+- [Barrierefreiheit](https://promptwerker.de/barrierefreiheit): Konformitätsstand nach WCAG 2.2 AA.
+- [KI-Transparenz](https://promptwerker.de/ki-transparenz): Angaben nach Art. 50 EU AI Act, Rollenverteilung Anbieter/Betreiber, ausgeschlossene Anwendungsfälle.
+
+## Häufige Fragen
+
+- Verarbeitet promptwerker Daten in der EU? Website-Hosting und E-Mail laufen in Deutschland. In Kundenprojekten hängt es vom eingesetzten Baustein ab; die vollständige Liste mit Verarbeitungsorten steht unter /avv.
+- Wer ist Betreiber im Sinne des EU AI Act? In der Regel der Kunde, der das System einsetzt. promptwerker liefert Kennzeichnung, Dokumentation und Schulung dazu. Details unter /ki-transparenz.
+- Gibt es einen AV-Vertrag? Ja, projektbezogen und vor Beginn jeder Verarbeitung. Anforderung formlos an kontakt@promptwerker.de.
+- Werden Daten zum Training von KI-Modellen genutzt? Nein. Es werden ausschließlich Geschäftskonditionen genutzt, die eine Trainingsverwendung übermittelter Inhalte ausschließen.

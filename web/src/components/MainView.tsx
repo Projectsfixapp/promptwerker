@@ -1,22 +1,30 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { topics } from "@/lib/topics";
-import { bottomCards } from "@/lib/bottomCards";
 import TopicCard from "./TopicCard";
-import CardCarousel3D from "./CardCarousel3D";
+import FooterZone from "./FooterZone";
+import RoadmapCard from "./RoadmapCard";
+import AuditSection from "./AuditSection";
+import TypewriterHeading from "./TypewriterHeading";
+
+// three.js + GSAP gehören nicht ins hydrations-kritische Bundle — gleiche
+// Behandlung wie NeuralBackground.
+const MagicRingScene = dynamic(() => import("./MagicRingScene"), { ssr: false });
 
 export default function MainView({
   onSelectTopic,
   onOpenContact,
+  onOpenAppointment,
 }: {
   onSelectTopic: (id: string) => void;
-  onOpenContact: () => void;
+  onOpenContact: (meta?: { heading?: string; subject?: string }) => void;
+  onOpenAppointment: () => void;
 }) {
   const visibleTopics = topics.filter((topic) => topic.enabled);
-  const visibleBottomCards = bottomCards.filter((card) => card.enabled);
 
   return (
-    <main className="relative">
+    <main id="inhalt" className="relative">
       <section className="flex min-h-[92vh] items-center px-6">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-wider text-accent">
@@ -35,25 +43,24 @@ export default function MainView({
             KI-Systeme, die dein Unternehmen tatsächlich entlastet. Keine Theorie, sondern ein
             fertiges System in Wochen statt Monaten.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <button
-              type="button"
-              onClick={onOpenContact}
-              className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-accent-ink"
-            >
-              Kostenloses Analysegespräch buchen
-            </button>
-          </div>
         </div>
       </section>
 
-      <section className="mx-auto flex max-w-4xl flex-col gap-10 px-6 py-24">
+      <AuditSection onOpenContact={onOpenContact} />
+
+      <section id="topics-section" className="mx-auto flex max-w-4xl flex-col gap-10 px-6 py-24">
+        <RoadmapCard onOpenContact={onOpenContact} onOpenAppointment={onOpenAppointment} />
+        <div className="mt-16">
+          <TypewriterHeading text="Anwendungsbereiche für deinen ersten KI-Mitarbeiter" />
+        </div>
         {visibleTopics.map((topic) => (
           <TopicCard key={topic.id} topic={topic} onOpen={onSelectTopic} />
         ))}
       </section>
 
-      <CardCarousel3D cards={visibleBottomCards} />
+      <MagicRingScene />
+
+      <FooterZone />
     </main>
   );
 }

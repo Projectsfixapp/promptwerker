@@ -2,9 +2,6 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import * as THREE from "three";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { useScroll } from "motion/react";
 
 export type NeuralBackgroundHandle = {
@@ -51,6 +48,30 @@ const NeuralBackground = forwardRef<NeuralBackgroundHandle>(function NeuralBackg
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // Defer the expensive WebGL/postprocessing setup off the critical rendering path —
+    // starting it immediately on mount competed with hydration for main-thread time
+    // and dominated TBT/TTI in Lighthouse. Idle callback pushes it past first interaction.
+    const requestIdle: (cb: () => void) => number =
+      typeof window.requestIdleCallback === "function"
+        ? (cb) => window.requestIdleCallback(cb, { timeout: 1500 })
+        : (cb) => window.setTimeout(cb, 200);
+    const cancelIdle: (id: number) => void =
+      typeof window.cancelIdleCallback === "function"
+        ? window.cancelIdleCallback.bind(window)
+        : window.clearTimeout.bind(window);
+
+    let disposeScene: (() => void) | undefined;
+    const idleId = requestIdle(() => {
+      disposeScene = initScene(canvas);
+    });
+
+    return () => {
+      cancelIdle(idleId);
+      disposeScene?.();
+    };
+  }, [scrollYProgress]);
+
+  function initScene(canvas: HTMLCanvasElement) {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
@@ -60,7 +81,7 @@ const NeuralBackground = forwardRef<NeuralBackgroundHandle>(function NeuralBackg
     } catch {
       gl = null;
     }
-    if (!gl) return;
+    if (!gl) return undefined;
 
     const NODE_COUNT = isMobile ? 60 : 130;
     const PULSE_COUNT = isMobile ? 18 : 50;
@@ -72,10 +93,10 @@ const NeuralBackground = forwardRef<NeuralBackgroundHandle>(function NeuralBackg
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
-      antialias: true,
+      antialias: false,
       powerPreference: "high-performance",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.5));
     renderer.setClearColor(BG_COLOR, 1);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.1;
@@ -249,19 +270,16 @@ const NeuralBackground = forwardRef<NeuralBackgroundHandle>(function NeuralBackg
       };
     };
 
-    const composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-    const bloomPass = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.65, 0.4, 0.42);
-    composer.addPass(bloomPass);
-
+    // No EffectComposer/UnrealBloomPass: the point sprites already carry an additive
+    // radial-gradient glow (see makeGlowTexture above), so a full postprocessing bloom
+    // pipeline (bright-pass + multi-mip blur + composite, every frame) was redundant
+    // cost — it was the single biggest main-thread/GPU expense in this component.
     function resize() {
       const w = window.innerWidth;
       const h = window.innerHeight;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
-      composer.setSize(w, h);
-      bloomPass.resolution.set(w, h);
     }
     resize();
     window.addEventListener("resize", resize);
@@ -291,7 +309,7 @@ const NeuralBackground = forwardRef<NeuralBackgroundHandle>(function NeuralBackg
         updatePulses(delta);
       }
       updateHighlight();
-      composer.render();
+      renderer.render(scene, camera);
     }
 
     function loop() {
@@ -322,7 +340,6 @@ const NeuralBackground = forwardRef<NeuralBackgroundHandle>(function NeuralBackg
       unsubscribeScroll();
       getCtaOriginImplRef.current = () => null;
       timer.dispose();
-      composer.dispose();
       renderer.dispose();
       nodeGeo.dispose();
       edgeGeo.dispose();
@@ -333,7 +350,7 @@ const NeuralBackground = forwardRef<NeuralBackgroundHandle>(function NeuralBackg
       nodeGlowTexture.dispose();
       pulseGlowTexture.dispose();
     };
-  }, [scrollYProgress]);
+  }
 
   return (
     <canvas
