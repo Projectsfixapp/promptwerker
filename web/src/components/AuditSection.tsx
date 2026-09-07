@@ -6,7 +6,10 @@ import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { auditQuestions, AUDIT_CATEGORIES, auditSources } from "@/lib/audit";
 import SynapseStrands from "./SynapseStrands";
 
-type Stage = "intro" | "question" | "result";
+/* "teaser" ersetzt die frühere große Intro-Stufe: die Karte startet als
+   kompakter Anriss und klappt erst beim Start mit Effekt zur vollen
+   Fragestrecke auf. */
+type Stage = "teaser" | "question" | "result";
 
 // Reifegrad-Audit nutzt das bereits im Rest der Seite verwendete Blau
 // (--color-accent) statt Magenta — ACCENT für Flächen/Buttons/Ränder,
@@ -79,10 +82,15 @@ function MethodologyDisclosure({
 
 export default function AuditSection({
   onOpenContact,
+  compact = false,
 }: {
   onOpenContact: (meta?: { heading?: string; subject?: string }) => void;
+  /** Schlanke Variante für die alternative Startseite (/start-b): gleiche
+      Fragen, gleicher Score, gleiche CTAs — nur gedrängtere Typografie und
+      weniger Höhe. Ohne die Prop rendert alles exakt wie bisher. */
+  compact?: boolean;
 }) {
-  const [stage, setStage] = useState<Stage>("intro");
+  const [stage, setStage] = useState<Stage>("teaser");
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>(
     Array(auditQuestions.length).fill(null),
@@ -125,7 +133,7 @@ export default function AuditSection({
   function goBack() {
     setShowWhy(false);
     if (index === 0) {
-      setStage("intro");
+      setStage("teaser");
       return;
     }
     setIndex(index - 1);
@@ -149,90 +157,98 @@ export default function AuditSection({
   });
 
   return (
-    <div id="audit-section" ref={wrapperRef} className="relative mx-4 mb-10 sm:mx-8">
+    <div
+      id="audit-section"
+      ref={wrapperRef}
+      className={compact ? "relative mx-auto mb-8 w-full max-w-3xl px-4" : "relative mx-4 mb-10 sm:mx-8"}
+    >
+      {/* layout: animiert den Größensprung der Karte beim Aufklappen vom
+          Teaser zur Fragestrecke, statt hart umzubrechen. */}
       <motion.div
-        className="glass-panel-liquid relative overflow-hidden rounded-[2rem]"
+        layout
+        transition={{ layout: { type: "spring", stiffness: 120, damping: 20 } }}
+        className={`glass-panel-liquid relative overflow-hidden ${compact ? "rounded-3xl" : "rounded-[2rem]"}`}
         style={{ scale: cardScale, opacity: cardOpacity, transformOrigin: "top center", color: PAPER_INK }}
       >
         <SynapseStrands progress={scrollYProgress} />
-        <div className="relative z-10 mx-auto max-w-2xl px-6 py-16 sm:py-20">
+        <div
+          className={
+            stage === "teaser"
+              ? "relative z-10 mx-auto max-w-3xl px-6 py-7"
+              : compact
+                ? "relative z-10 mx-auto max-w-xl px-5 py-9 sm:py-11"
+                : "relative z-10 mx-auto max-w-2xl px-6 py-12 sm:py-14"
+          }
+        >
         <AnimatePresence mode="wait">
-          {stage === "intro" && (
+          {stage === "teaser" && (
             <motion.div
-              key="intro"
+              key="teaser"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.4 }}
-              className="text-center"
+              exit={{ opacity: 0, scale: 0.92, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col items-center gap-4 text-center sm:flex-row sm:flex-wrap sm:justify-between sm:text-left"
             >
-              <span
-                className="inline-block rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider"
-                style={{ background: "var(--color-accent-soft)", color: ACCENT_TEXT }}
-              >
-                KI-Reifegrad-Audit · 10 Fragen · Kostenlos
-              </span>
-              <h2 className="mt-6 text-3xl sm:text-4xl">
-                Wo steht dein Unternehmen wirklich auf dem Weg zur KI?
-              </h2>
-              <p className="mx-auto mt-4 max-w-lg font-card-body text-base leading-relaxed" style={{ color: PAPER_BODY }}>
-                Eine ehrliche Standortbestimmung in unter 5 Minuten. Am Ende bekommst du einen
-                Reifegrad-Score und eine klare Empfehlung, wie es weitergeht.
-              </p>
-
-              <ul className="mx-auto mt-8 flex max-w-md flex-col gap-3 text-left">
-                {[
-                  "Score 0–10 mit Aufschlüsselung nach Kategorie",
-                  "Keine Anmeldung, keine versteckten Verkaufsschleifen",
-                  "Am Ende: konkrete Empfehlung statt Buzzwords",
-                ].map((point) => (
-                  <li key={point} className="flex items-start gap-3 font-card-body text-sm" style={{ color: PAPER_BODY }}>
-                    <span className="mt-0.5 shrink-0" style={{ color: ACCENT_TEXT }}>
-                      ✓
-                    </span>
-                    {point}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-9 flex flex-col items-center gap-3">
-                <div className="relative">
-                  <motion.div
-                    aria-hidden
-                    className="absolute inset-0 rounded-full blur-xl"
-                    style={{ background: ACCENT, opacity: ctaGlow, scale: 1.4 }}
-                  />
+              {/* flex-1 + min-w-0: der Textblock gibt nach, statt den Knopf
+                  in die zweite Zeile zu drücken. */}
+              <div className="sm:min-w-0 sm:flex-1 sm:pr-4">
+                <span
+                  className="inline-block rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider"
+                  style={{ background: "var(--color-accent-soft)", color: ACCENT_TEXT }}
+                >
+                  KI-Reifegrad-Audit · 10 Fragen · Kostenlos
+                </span>
+                <h2 className="mt-2 text-lg sm:text-xl">
+                  Wo steht dein Unternehmen auf dem Weg zur KI?
+                </h2>
+                <p className="mt-1 font-card-body text-xs" style={{ color: PAPER_BODY }}>
+                  Unter 5 Minuten · Score 0–10 · keine Anmeldung.{" "}
                   <button
                     type="button"
-                    onClick={() => setStage("question")}
-                    className="relative rounded-full px-8 py-3.5 text-sm font-semibold text-accent-ink transition-transform hover:scale-[1.03]"
-                    style={{ background: ACCENT }}
+                    onClick={() => setShowMethodology((v) => !v)}
+                    className="underline-offset-2 hover:underline"
+                    style={{ color: ACCENT_TEXT }}
                   >
-                    Audit jetzt starten →
+                    Basis des Modells
                   </button>
-                </div>
+                </p>
+              </div>
+
+              <div className="relative shrink-0">
+                <motion.div
+                  aria-hidden
+                  className="absolute inset-0 rounded-full blur-xl"
+                  style={{ background: ACCENT, opacity: ctaGlow, scale: 1.4 }}
+                />
                 <button
                   type="button"
-                  onClick={skipToTopics}
-                  className="text-sm font-medium underline-offset-4 hover:underline"
-                  style={{ color: PAPER_BODY }}
+                  onClick={() => setStage("question")}
+                  className="ansprechpartner-glow relative rounded-full px-6 py-3 text-sm font-semibold text-accent-ink transition-transform hover:scale-[1.04]"
+                  style={{ background: ACCENT }}
                 >
-                  Überspringen und weiterscrollen
+                  Audit jetzt starten →
                 </button>
               </div>
 
-              <MethodologyDisclosure
-                open={showMethodology}
-                onToggle={() => setShowMethodology((v) => !v)}
-              />
+              {showMethodology && (
+                <div className="w-full sm:col-span-full">
+                  <MethodologyDisclosure open onToggle={() => setShowMethodology(false)} />
+                </div>
+              )}
             </motion.div>
           )}
 
           {stage === "question" && (
             <motion.div
               key={question.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 22, scale: 0.94 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                transition: { type: "spring", stiffness: 160, damping: 18 },
+              }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.35 }}
             >
@@ -257,7 +273,7 @@ export default function AuditSection({
               >
                 {question.category}
               </span>
-              <h3 className="mt-4 text-2xl sm:text-3xl">{question.prompt}</h3>
+              <h3 className={compact ? "mt-3 text-xl sm:text-2xl" : "mt-4 text-2xl sm:text-3xl"}>{question.prompt}</h3>
 
               <button
                 type="button"
@@ -274,7 +290,7 @@ export default function AuditSection({
                 </p>
               )}
 
-              <div className="mt-6 flex flex-col gap-3">
+              <div className={`flex flex-col ${compact ? "mt-4 gap-2" : "mt-6 gap-3"}`}>
                 {question.options.map((opt) => {
                   const isSelected = selected === opt.score;
                   return (
@@ -282,7 +298,7 @@ export default function AuditSection({
                       key={opt.label}
                       type="button"
                       onClick={() => selectOption(opt.score)}
-                      className="flex items-start gap-3 rounded-2xl border p-4 text-left transition-colors"
+                      className={`flex items-start gap-3 rounded-2xl border text-left transition-colors ${compact ? "p-3" : "p-4"}`}
                       style={{
                         borderColor: isSelected ? ACCENT : "rgba(21,18,27,0.1)",
                         background: isSelected ? "var(--color-accent-soft)" : "white",
@@ -308,7 +324,7 @@ export default function AuditSection({
                 })}
               </div>
 
-              <div className="mt-7 flex items-center justify-between">
+              <div className={`flex items-center justify-between ${compact ? "mt-5" : "mt-7"}`}>
                 <button
                   type="button"
                   onClick={goBack}
@@ -345,8 +361,8 @@ export default function AuditSection({
               >
                 Dein Ergebnis
               </span>
-              <div className="mt-6 flex items-center justify-center gap-1">
-                <span className="text-6xl font-bold" style={{ color: PAPER_INK }}>
+              <div className={`flex items-center justify-center gap-1 ${compact ? "mt-4" : "mt-6"}`}>
+                <span className={`font-bold ${compact ? "text-5xl" : "text-6xl"}`} style={{ color: PAPER_INK }}>
                   {score10.toFixed(1)}
                 </span>
                 <span className="text-2xl" style={{ color: PAPER_BODY }}>
@@ -357,7 +373,7 @@ export default function AuditSection({
                 Dein KI-Reifegrad im Überblick — nach Kategorie aufgeschlüsselt.
               </p>
 
-              <div className="mx-auto mt-8 flex max-w-md flex-col gap-4 text-left">
+              <div className={`mx-auto flex max-w-md flex-col text-left ${compact ? "mt-6 gap-3" : "mt-8 gap-4"}`}>
                 {categoryBreakdown.map((c) => (
                   <div key={c.category}>
                     <div className="flex items-center justify-between text-xs font-semibold" style={{ color: PAPER_INK }}>
@@ -374,7 +390,7 @@ export default function AuditSection({
                 ))}
               </div>
 
-              <div className="mx-auto mt-10 flex max-w-lg flex-col gap-3 sm:flex-row">
+              <div className={`mx-auto flex max-w-lg flex-col gap-3 sm:flex-row ${compact ? "mt-7" : "mt-10"}`}>
                 <button
                   type="button"
                   onClick={() =>
@@ -383,14 +399,14 @@ export default function AuditSection({
                       subject: `Audit-Ergebnis: ${score10.toFixed(1)}/10`,
                     })
                   }
-                  className="flex-1 rounded-full px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.03]"
+                  className={`flex-1 rounded-full px-6 text-sm font-semibold text-white transition-transform hover:scale-[1.03] ${compact ? "py-2.5" : "py-3.5"}`}
                   style={{ background: ACCENT }}
                 >
                   Kostenloses Gespräch für meine Roadmap
                 </button>
                 <Link
                   href="/portal/login"
-                  className="flex-1 rounded-full border px-6 py-3.5 text-center text-sm font-semibold transition-colors"
+                  className={`flex-1 rounded-full border px-6 text-center text-sm font-semibold transition-colors ${compact ? "py-2.5" : "py-3.5"}`}
                   style={{ borderColor: ACCENT_TEXT, color: ACCENT_TEXT }}
                 >
                   Fertige Automatisierungen ansehen

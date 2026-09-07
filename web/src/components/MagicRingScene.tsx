@@ -54,6 +54,17 @@ function rampe(wert: number, von: number, bis: number): number {
   return t * t * (3 - 2 * t);
 }
 
+/** Deterministischer Streuwert — kein Math.random(), damit die Partikel
+    bei jedem Laden identisch verteilt sind (gleiches Muster wie in
+    ScrollWebsiteScene). */
+function streu(i: number, kanal: number): number {
+  const n = Math.sin(i * 127.1 + kanal * 311.7) * 43758.5453;
+  return n - Math.floor(n);
+}
+
+/** Anzahl der Tiefen-Partikel im Raum hinter und um den Ring. */
+const PARTIKEL = 420;
+
 export default function MagicRingScene() {
   const sektionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -125,6 +136,23 @@ export default function MagicRingScene() {
         entsorgbar.push(textur);
       });
     });
+
+    /* Tempo-Ring: eine dünne, additiv leuchtende Bahn auf der Badge-Kreis-
+       linie. Sie liegt in der Ringgruppe (neigt und dreht sich also mit)
+       und wird erst mit wachsender Drehzahl sichtbar — die Badges wirken
+       dadurch, als zögen sie bei hoher Geschwindigkeit eine Lichtspur. */
+    const streifenGeometrie = new THREE.TorusGeometry(RING_RADIUS, 0.025, 8, 120);
+    const streifenMaterial = new THREE.MeshBasicMaterial({
+      color: 0x66d9ff,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const streifen = new THREE.Mesh(streifenGeometrie, streifenMaterial);
+    streifen.rotation.x = Math.PI / 2; // Torus liegt sonst senkrecht
+    ringGruppe.add(streifen);
+    entsorgbar.push(streifenGeometrie, streifenMaterial);
 
     // -------------------------------------------------------------- Strahler
     const scheinTextur = makeGlowTexture(0.0, 0.5);
@@ -248,8 +276,56 @@ export default function MagicRingScene() {
     szene.add(reflex);
     entsorgbar.push(reflexTextur, reflex.material);
 
+    /* Warmes Gegenlicht hinter der Figur: hebt die Silhouette vom kühlen
+       Strahler ab, sobald Dennis aus dem Nebel tritt — klassische
+       Key/Rim-Lichtführung, nur als billiger additiver Sprite. */
+    const gegenlicht = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: scheinTextur,
+        color: 0xffc9a0,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        toneMapped: false,
+      })
+    );
+    gegenlicht.position.set(0, PERSON_MITTE_Y + 0.4, -1.4);
+    gegenlicht.scale.set(6, 8, 1);
+    szene.add(gegenlicht);
+    entsorgbar.push(gegenlicht.material);
+
+    /* Tiefen-Partikel: schwach leuchtende Punkte im Raum hinter dem Ring.
+       Sie geben der Kamerafahrt Parallaxe und damit echte Tiefenwirkung —
+       ohne sie liest sich der schwarze Hintergrund als flache Fläche.
+       Deterministisch verteilt, damit die Szene bei jedem Laden gleich ist. */
+    const punktPositionen = new Float32Array(PARTIKEL * 3);
+    for (let i = 0; i < PARTIKEL; i++) {
+      punktPositionen[i * 3] = (streu(i, 11) - 0.5) * 52;
+      punktPositionen[i * 3 + 1] = -3 + streu(i, 12) * 14;
+      punktPositionen[i * 3 + 2] = -46 + streu(i, 13) * 50;
+    }
+    const punktGeometrie = new THREE.BufferGeometry();
+    punktGeometrie.setAttribute("position", new THREE.BufferAttribute(punktPositionen, 3));
+    const punktMaterial = new THREE.PointsMaterial({
+      map: scheinTextur,
+      color: 0x8fd4ff,
+      size: 0.32,
+      sizeAttenuation: true,
+      transparent: true,
+      opacity: 0.2,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const punkte = new THREE.Points(punktGeometrie, punktMaterial);
+    szene.add(punkte);
+    entsorgbar.push(punktGeometrie, punktMaterial);
+
     // ------------------------------------------------------------ Zustand
     const zustand = { ziel: 0, weich: 0 };
+    /* Basis-Sichtfeld aus groesseAnpassen — szeneAktualisieren legt darauf
+       einen leichten scrollabhängigen Tele-Zuschlag. */
+    let basisFov = 42;
     let frames: ImageBitmap[] = [];
     let letzterFrameIndex = -1;
     let laeuft = true;
@@ -262,7 +338,8 @@ export default function MagicRingScene() {
       kamera.aspect = breite / hoehe;
 
       // Hochformat: Sichtfeld weiten, sonst ragt der Ring aus dem Bild
-      kamera.fov = kamera.aspect < 0.85 ? 58 : kamera.aspect < 1.3 ? 50 : 42;
+      basisFov = kamera.aspect < 0.85 ? 58 : kamera.aspect < 1.3 ? 50 : 42;
+      kamera.fov = basisFov;
       kamera.updateProjectionMatrix();
     }
 
@@ -276,22 +353,41 @@ export default function MagicRingScene() {
          Bild laufend) und die erhobenen Hände bei y 5.25. */
       kamera.position.set(
         Math.sin(p * Math.PI * 0.6) * 0.7,
-        THREE.MathUtils.lerp(3.0, 2.2, anflug) - feinschnitt * 0.05,
+        /* Das leichte zeitbasierte Schweben (±0.05) nimmt der Fahrt die
+           Starrheit einer Schiene; bei reduzierter Bewegung ist zeit 0 und
+           der Anteil fällt weg. */
+        THREE.MathUtils.lerp(3.0, 2.2, anflug) - feinschnitt * 0.05 + Math.sin(zeit * 0.4) * 0.05,
         THREE.MathUtils.lerp(20.0, 13.5, anflug) - feinschnitt * 0.4
       );
       kamera.lookAt(0, THREE.MathUtils.lerp(1.2, 1.8, anflug), 0);
+      /* Tele-Zuschlag als Bogen, nicht als Rampe: er wächst auf der Fahrt
+         auf -3.5° und geht bis p 0.95 wieder auf 0 zurück. Als reine Rampe
+         blieb das Sichtfeld am Ende enger — dadurch schnitt die Oberkante
+         die erhobenen Hände ab, gegen die der Endstand oben abgestimmt ist. */
+      const teleBogen = rampe(p, 0.25, 0.62) * (1 - rampe(p, 0.72, 0.95));
+      kamera.fov = basisFov - teleBogen * 3.5;
+      kamera.updateProjectionMatrix();
 
       // --- Ring: Grunddrehung plus scrollabhängiger Zuschlag
       ringGruppe.rotation.y = zeit * GRUNDTEMPO + SPIN_GESAMT * Math.pow(p, 1.8);
       ringGruppe.rotation.x = RING_NEIGUNG + rampe(p, 0.2, 1.0) * 0.05;
 
-      // Badges am hinteren Ringbogen abdunkeln — erzeugt Tiefe
+      /* Badges am hinteren Ringbogen abdunkeln — mit Kontrastkurve statt
+         linear: hinten fällt stärker zurück (dunkler + grauer Tint),
+         vorn steht größer und ungetrübt. Das trennt die vordere, lesbare
+         Reihe sauber vom hinteren Bogen und verstärkt die Tiefe. */
       for (const badge of badges) {
         const weltZ = Math.cos(badge.userData.winkel + ringGruppe.rotation.y);
         const material = badge.material as THREE.SpriteMaterial;
-        material.opacity = THREE.MathUtils.lerp(0.34, 1, (weltZ + 1) / 2);
-        badge.scale.setScalar(THREE.MathUtils.lerp(0.74, 1.0, (weltZ + 1) / 2));
+        const tiefe = Math.pow((weltZ + 1) / 2, 1.6);
+        material.opacity = THREE.MathUtils.lerp(0.22, 1, tiefe);
+        material.color.setScalar(THREE.MathUtils.lerp(0.6, 1, tiefe));
+        badge.scale.setScalar(THREE.MathUtils.lerp(0.7, 1.06, tiefe));
       }
+
+      // --- Tempo-Ring: Lichtspur wächst mit der Drehzahl (∝ p, wie der
+      // Spin-Zuschlag) und bleibt am Ende als dezente Bahn stehen.
+      streifenMaterial.opacity = rampe(p, 0.15, 0.85) * 0.3;
 
       // --- Nebel: dicht am Anfang, verzieht sich bis p 0.78
       const nebelStaerke = 1 - rampe(p, 0.28, 0.78);
@@ -320,6 +416,14 @@ export default function MagicRingScene() {
       const massstab = THREE.MathUtils.lerp(0.86, 1, sichtbar);
       person.scale.setScalar(massstab);
       (reflex.material as THREE.SpriteMaterial).opacity = sichtbar * licht * 0.32;
+      // Warmes Gegenlicht folgt der Sichtbarkeit der Figur
+      (gegenlicht.material as THREE.SpriteMaterial).opacity = sichtbar * licht * 0.22;
+
+      // --- Tiefen-Partikel: langsame Eigenrotation plus Parallaxe zur
+      // Kamerafahrt; sie hellen mit dem Strahler leicht auf.
+      punkte.rotation.y = zeit * 0.008 + p * 0.3;
+      punkte.position.z = p * 3;
+      punktMaterial.opacity = 0.14 + licht * 0.14;
 
       // Überschrift verabschiedet sich, bevor die Figur den Platz einnimmt —
       // sonst liegt die Zeile mitten in Dennis' Gesicht.
@@ -342,9 +446,11 @@ export default function MagicRingScene() {
       if (!laeuft) return;
       animationsId = requestAnimationFrame(schleife);
 
-      // Nachziehen statt hartes Setzen: entkoppelt die Darstellung vom
-      // stotternden Scroll-Event und ergibt die weiche Kamerafahrt.
-      zustand.weich += (zustand.ziel - zustand.weich) * 0.085;
+      /* Nachziehen statt hartes Setzen: entkoppelt die Darstellung vom
+         stotternden Scroll-Event und ergibt die weiche Kamerafahrt.
+         0.065 statt 0.085: die Fahrt schleppt etwas länger nach und wirkt
+         dadurch schwerer/filmischer, ohne spürbar zu verzögern. */
+      zustand.weich += (zustand.ziel - zustand.weich) * 0.065;
 
       szeneAktualisieren(zustand.weich, performance.now() / 1000);
       renderer.render(szene, kamera);

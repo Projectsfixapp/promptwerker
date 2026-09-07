@@ -42,13 +42,35 @@ export default function SiteShell() {
     };
   }, [activeTopicId, showContact, showAppointment]);
 
-  // Erlaubt Unterseiten, den Kontakt-Overlay per Link zu öffnen: /?kontakt=1
+  /* Erlaubt Unterseiten und dem Footer, Overlays per Link zu öffnen:
+     /?kontakt=1 (Kontaktformular) bzw. /?termin=1 (Terminbuchung).
+     Das setState läuft im rAF-Callback statt synchron im Effect-Rumpf
+     (react-hooks/set-state-in-effect). */
   useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("kontakt") === "1") {
-      setContactOrigin(null);
-      setShowContact(true);
+    const params = new URLSearchParams(window.location.search);
+    const kontakt = params.get("kontakt") === "1";
+    const termin = params.get("termin") === "1";
+    if (!kontakt && !termin) return;
+    const id = requestAnimationFrame(() => {
+      if (kontakt) {
+        setContactOrigin(null);
+        setShowContact(true);
+      }
+      if (termin) setShowAppointment(true);
       window.history.replaceState(null, "", "/");
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  /* Die Ansprechpartner-Karte im Footer feuert "pw-termin": hier abfangen
+     und das Buchungs-Overlay weich öffnen statt die Seite neu zu laden. */
+  useEffect(() => {
+    function beiTermin(e: Event) {
+      e.preventDefault();
+      setShowAppointment(true);
     }
+    window.addEventListener("pw-termin", beiTermin);
+    return () => window.removeEventListener("pw-termin", beiTermin);
   }, []);
 
   function handleBack() {

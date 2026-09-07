@@ -12,6 +12,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    // Live-Demo zur Leistung 3D-Scroll-Websites — eigene Route außerhalb
+    // von /leistungen, deshalb hier von Hand.
+    { url: `${baseUrl}/demo/3d-scroll`, changeFrequency: "monthly", priority: 0.7 },
     // Rechtstexte gehören in die Sitemap: sie sind indexierbar und werden
     // von Interessenten aktiv gesucht ("AVV", "Auftragsverarbeitung").
     { url: `${baseUrl}/impressum`, changeFrequency: "yearly", priority: 0.2 },

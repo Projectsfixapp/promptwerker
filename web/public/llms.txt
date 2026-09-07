@@ -16,7 +16,12 @@ Einzelunternehmen von Dennis Beichert (better than e-commerce D. Beichert), Sitz
 - [Implementierung & Lösungen](https://promptwerker.de/leistungen/implementierung-loesungen): Umsetzung bis in den Produktivbetrieb.
 - [Schulungen & Fachvorträge](https://promptwerker.de/leistungen/schulungen-fachvortraege): Kompetenzaufbau im Team, auch mit Blick auf Art. 4 EU AI Act.
 - [Use Cases](https://promptwerker.de/leistungen/use-cases): Anwendungsfälle aus echten Kundenprojekten.
+- [3D-Scroll-Websites](https://promptwerker.de/leistungen/3d-scroll-websites): Scroll-getriebene WebGL-Seiten, bei denen sich der Inhalt beim Scrollen aufbaut — in Echtzeit gerendert, ohne Hintergrundvideo, mit Textfassung als Rückfallebene.
 - [Workshop: Roadmap im Selbststudium](https://promptwerker.de/leistungen/workshop-roadmap): Video-Workshop für 99 €.
+
+## Demos
+
+- [3D-Scroll-Demo](https://promptwerker.de/demo/3d-scroll): Live-Demo einer scroll-getriebenen 3D-Website inklusive ehrlicher Einordnung, wann sich das lohnt und wann nicht.
 
 ## Über
 

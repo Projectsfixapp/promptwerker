@@ -13,6 +13,8 @@ type PageMeta = {
   short: string;
   detail: string[];
   cta: string;
+  demoHref?: string;
+  demoLabel?: string;
 };
 
 function getAllPageMetas(): PageMeta[] {
@@ -29,6 +31,8 @@ function getAllPageMetas(): PageMeta[] {
       short: c.blurb,
       detail: c.detail ?? [],
       cta: c.cta ?? "Kostenloses Analysegespräch buchen",
+      demoHref: c.demoHref,
+      demoLabel: c.demoLabel,
     }));
 
   return [...fromTopics, ...fromCards];
@@ -127,13 +131,22 @@ export default async function LeistungPage(props: { params: Promise<{ slug: stri
         <h1 className="mt-3 text-4xl sm:text-5xl">{meta.title}</h1>
         <p className="mt-5 text-lg leading-relaxed text-body">{meta.short}</p>
 
-        <div className="mt-8">
+        <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href="/?kontakt=1"
             className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-accent-ink transition-transform hover:scale-[1.03]"
           >
             {meta.cta}
           </Link>
+          {/* Nur bei Leistungen mit Live-Demo (demoHref in bottomCards.ts) */}
+          {meta.demoHref && (
+            <Link
+              href={meta.demoHref}
+              className="glass-button-liquid inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold"
+            >
+              {meta.demoLabel ?? "Live-Demo ansehen"}
+            </Link>
+          )}
         </div>
       </section>
 

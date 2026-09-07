@@ -168,6 +168,91 @@ h3 {
 }
 
 
+/* Leuchtender Ansprechpartner-Knopf im Footer (AnsprechpartnerCard.tsx):
+   pulsiert in den Farben des neuronalen Netzes — Akzent-Cyan plus das
+   gedimmte Trace-Blau der Hintergrund-Linien. Die globale
+   prefers-reduced-motion-Regel oben stoppt auch diese Animation. */
+@keyframes ansprechpartner-puls {
+  0%,
+  100% {
+    box-shadow:
+      0 0 18px rgba(56, 217, 255, 0.55),
+      0 0 44px rgba(var(--color-trace-dim), 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(56, 217, 255, 0.9),
+      0 0 78px rgba(var(--color-trace-dim), 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+}
+
+.ansprechpartner-glow {
+  animation: ansprechpartner-puls 2.6s ease-in-out infinite;
+}
+
+/* Energie-Ringe: aus dem Knopf laufen Wellen nach außen, wie die Pulse
+   entlang der Linien des neuronalen Netzes. Zwei Ringe mit halbem
+   Zeitversatz (delay im Markup) ergeben eine durchgehende Abfolge. */
+@keyframes energie-ring {
+  0% {
+    transform: scale(0.65);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.energie-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid rgba(56, 217, 255, 0.8);
+  animation: energie-ring 2.2s ease-out infinite;
+  pointer-events: none;
+}
+
+/* Laufendes Randlicht der Ansprechpartner-Karte: ein rotierender
+   Conic-Verlauf hinter dem Karteninhalt, sichtbar nur als schmaler Saum,
+   weil der Inhalt (inset 2px, eigene Fläche) die Mitte abdeckt. */
+@keyframes rand-lauf {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.laufender-rand {
+  position: relative;
+  overflow: hidden;
+}
+
+.laufender-rand::before {
+  content: "";
+  position: absolute;
+  inset: -45%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(56, 217, 255, 0.95) 38deg,
+    transparent 82deg,
+    transparent 178deg,
+    rgba(var(--color-trace-dim), 0.85) 218deg,
+    transparent 262deg
+  );
+  animation: rand-lauf 5.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .energie-ring,
+  .laufender-rand::before {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 /* 3D-Logo-Karussell (LogoCarousel3D.tsx): langsame, durchgängige Ring-Rotation */
 @keyframes carousel-spin {
   from {

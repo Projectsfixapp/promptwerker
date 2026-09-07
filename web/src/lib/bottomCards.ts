@@ -9,6 +9,11 @@ export type BottomCard = {
   eyebrow?: string;
   detail?: string[];
   cta?: string;
+  /** Interner Link auf eine Live-Demo, die die Leistung vorführt. Gesetzt =
+      die Leistungsseite blendet zusätzlich einen Demo-Knopf ein. */
+  demoHref?: string;
+  /** Beschriftung des Demo-Knopfs. Ohne Angabe: "Live-Demo ansehen". */
+  demoLabel?: string;
 };
 
 // Neue Karte hinzufügen: Objekt nach diesem Schema unten anhängen.
@@ -82,6 +87,22 @@ export const bottomCards: BottomCard[] = [
       "Das beste KI-System bringt wenig, wenn das Team es nicht versteht oder ihm nicht vertraut — Akzeptanz entscheidet über den tatsächlichen Nutzen.",
       "Unsere Schulungen sind praxisnah: keine abstrakten KI-Grundlagen, sondern konkrete Werkzeuge und Abläufe aus eurem Arbeitsalltag.",
       "Auf Wunsch ergänzen Fachvorträge — etwa für Führungskräfte-Runden oder Kick-off-Veranstaltungen — die praktische Schulung um den strategischen Überblick.",
+    ],
+  },
+  {
+    id: "3d-scroll-websites",
+    title: "3D-Scroll-Websites",
+    blurb: "Seiten, bei denen Scrollen zur Kamerafahrt wird — in Echtzeit im Browser gerendert, ohne Video.",
+    enabled: true,
+    hasPage: true,
+    eyebrow: "Web-Erlebnisse",
+    cta: "3D-Scroll-Seite anfragen",
+    demoHref: "/demo/3d-scroll",
+    demoLabel: "Live-Demo ansehen",
+    detail: [
+      "Die meisten Websites sind eine Liste: Abschnitt unter Abschnitt, Besucher scrollen daran vorbei. Eine 3D-Scroll-Seite macht aus derselben Strecke eine Kamerafahrt — der Inhalt baut sich auf, während gescrollt wird.",
+      "Technisch läuft das über WebGL und eine scrollgesteuerte Szene, nicht über ein Hintergrundvideo: Jeder Zustand ist an die Scrollposition gebunden, Hochscrollen spielt alles rückwärts, und es gibt keinen Ladebalken vor dem ersten Bild.",
+      "Ohne WebGL oder bei aktivierter Systemeinstellung „Bewegung reduzieren“ erscheint derselbe Inhalt als ruhige Textfassung — die Seite bleibt bedienbar und barrierefrei statt leer.",
     ],
   },
   {

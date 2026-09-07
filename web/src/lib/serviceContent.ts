@@ -460,4 +460,84 @@ export const serviceContent: Record<string, ServiceContent> = {
       button: "Meinen Use Case besprechen",
     },
   },
+
+  "3d-scroll-websites": {
+    painPoints: [
+      "Deine Seite sieht aus wie die der Mitbewerber — gleicher Baukasten, gleiche Abschnittsfolge, austauschbar.",
+      "Besucher scrollen in Sekunden durch und bleiben nicht lange genug, um zu verstehen, was ihr eigentlich anbietet.",
+      "Erklärungsbedürftige Produkte brauchen mehrere Absätze Text, die kaum jemand liest.",
+      "Aufwändige Video-Hintergründe machen die Seite langsam und verschieben beim Nachladen das Layout.",
+    ],
+    process: [
+      {
+        title: "Story festlegen",
+        text: "Zuerst die Reihenfolge: Was soll ein Besucher in welcher Sekunde begreifen? Ohne diese Dramaturgie wird die Animation Selbstzweck.",
+      },
+      {
+        title: "Szene bauen",
+        text: "Die 3D-Szene entsteht aus Geometrie und Material, nicht aus gekauften Modellen oder generierten Videoclips — dadurch bleibt sie klein, änderbar und ohne laufende Materialkosten.",
+      },
+      {
+        title: "An die Scrollstrecke binden",
+        text: "Jeder Zustand wird als Funktion der Scrollposition gesetzt. Ergebnis: Hochscrollen spielt rückwärts, Anhalten hält an, nichts läuft gegen den Besucher.",
+      },
+      {
+        title: "Rückfallebenen und Messung",
+        text: "Textfassung ohne WebGL, ruhige Variante bei „Bewegung reduzieren“, Prüfung der Ladewerte auf echten Geräten — danach geht die Seite live.",
+      },
+    ],
+    benefits: [
+      {
+        title: "Sofort unterscheidbar",
+        text: "Eine Seite, die sich beim Scrollen aufbaut, wird als eigenständig wahrgenommen — nicht als weiteres Template.",
+      },
+      {
+        title: "Längere Verweildauer",
+        text: "Wer scrollt, um zu sehen was passiert, bleibt länger — und liest dabei die Botschaften, die auf der Strecke liegen.",
+      },
+      {
+        title: "Ohne Video-Ballast",
+        text: "Echtzeit-Rendering statt Videodatei: kein Puffern, kein Ladebalken, kein Layout-Sprung beim Nachladen.",
+      },
+      {
+        title: "Barrierefrei abgesichert",
+        text: "Textfassung und ruhige Variante sind Teil der Umsetzung, nicht ein späteres Zugeständnis.",
+      },
+    ],
+    useCase: {
+      title: "Beispiel: diese Website",
+      text: [
+        "Die Demo unter /demo/3d-scroll ist kein Werbefilm, sondern die Leistung selbst: Aus verstreuten Bausteinen setzt sich beim Scrollen eine komplette Seite zusammen — Navileiste, Hero, drei Karten, Footer.",
+        "Alles darin ist Geometrie, die der Browser rechnet: keine geladenen 3D-Modelle, keine Videoclips, keine externen Dienste. Deshalb entstehen pro Kundenprojekt auch keine laufenden Rendering-Kosten.",
+        "Wer die Systemeinstellung „Bewegung reduzieren“ aktiviert hat oder kein WebGL nutzen kann, bekommt denselben Ablauf als ruhige Textfassung zu sehen.",
+      ],
+    },
+    faq: [
+      {
+        q: "Wird die Seite dadurch langsam?",
+        a: "Nicht zwangsläufig. Die Szene wird als eigenes Bündel nachgeladen, blockiert also nicht den ersten Seitenaufbau, und es kommen keine Videodateien dazu. Entscheidend ist, dass die Szene aus Geometrie besteht statt aus geladenen Modellen.",
+      },
+      {
+        q: "Funktioniert das auf dem Handy?",
+        a: "Ja. Auflösung, Kantenglättung und Sichtfeld werden auf schmalen Geräten reduziert. Wo kein WebGL verfügbar ist, erscheint die Textfassung.",
+      },
+      {
+        q: "Was ist mit Suchmaschinen und KI-Antwortmaschinen?",
+        a: "Alle Texte stehen im HTML, nicht im Canvas — sie sind lesbar und zitierbar, unabhängig davon, ob die Animation läuft.",
+      },
+      {
+        q: "Kann ich Inhalte später selbst ändern?",
+        a: "Texte ja. Die Bewegungsabläufe der Szene sind gebaut, nicht redaktionell gepflegt — größere Änderungen daran sind ein eigener Auftrag.",
+      },
+      {
+        q: "Lohnt sich das für jedes Unternehmen?",
+        a: "Nein. Bei reinen Kontaktseiten, großen Shops und wöchentlich wechselnden Inhalten bringt eine klassische Seite mehr. Die ehrliche Einordnung dazu steht auf der Demo-Seite.",
+      },
+    ],
+    finalCta: {
+      headline: "Erst ansehen, dann entscheiden",
+      text: "Die Live-Demo läuft unter /demo/3d-scroll. Im kostenlosen Erstgespräch klären wir danach, ob sich der Aufwand bei deiner Zielgruppe rechnet — oder ob das Geld woanders besser liegt.",
+      button: "Kostenloses Erstgespräch buchen",
+    },
+  },
 };

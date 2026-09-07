@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AnsprechpartnerCard from "./AnsprechpartnerCard";
 import FooterContactForm from "./FooterContactForm";
 import { anbieter } from "@/lib/legal";
 import { topics } from "@/lib/topics";
@@ -44,6 +45,10 @@ export default function Footer() {
   return (
     <footer className="glass-panel-light relative mx-4 mb-6 overflow-hidden rounded-3xl px-6 py-12 sm:mx-8 sm:px-10">
       <h2 className="sr-only">Seitenfuß</h2>
+
+      {/* Setzt sich beim Erreichen des Footers zusammen und öffnet die
+          Ansprechpartner-Karte — Client-Insel im Server-Footer. */}
+      <AnsprechpartnerCard />
 
       <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-12 lg:flex-row lg:justify-between">
         <div className="flex flex-col gap-10 lg:max-w-2xl">
