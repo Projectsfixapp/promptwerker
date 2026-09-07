@@ -91,7 +91,7 @@ Inhaltliche Änderungen an Anbieterdaten gehören nach `lib/legal.ts`, nicht in 
 Aktuell **keines**. Die Domain promptwerker.de parkt bei united-domains (Stand 31.07.2026), `render.yaml` beschreibt noch das alte WordPress-Setup. Ein Deploy-Ziel für die Next.js-App muss noch festgelegt werden.
 
 <!-- PFLICHTEN:ANFANG erzeugt von ops/pflichten-verteilen.py -->
-<!-- Quelle: ops/GEMEINSAME_PFLICHTEN.md · Stand 9fb4bc6d3a -->
+<!-- Quelle: ops/GEMEINSAME_PFLICHTEN.md · Stand 13ff7b6f5c -->
 
 > **Dieser Abschnitt ist erzeugt, nicht geschrieben.** Wer ihn hier von Hand
 > aendert, verliert es beim naechsten Lauf. Aenderungen gehoeren in
@@ -197,7 +197,47 @@ nie aus dem Gedächtnis. Jede Routen- oder Containermessung braucht eine **Posit
 (ein Pfad, der bekannt fehlschlägt), sonst misst du den falschen Host.
 Umgebungsabhängiges nie am Quelltext belegen, immer `printenv` im Container.
 
-### 5. Diese Datei ist die Quelle — die Kopien werden erzeugt
+### 5. Bauauflage — immer mit den Normen bauen
+
+Gilt für **jeden** Bau, in jedem Projekt, ohne Auslöser (Dennis, 08.09.2026:
+„immer mit den Normen bauen wie ON.OS gebaut wurde"). Vollfassung mit Befunden
+und Erzwingern: `C:\Users\Dell\ops\BAUAUFLAGE.md`. Normwissen:
+`~/.claude/agents/iso-auditor-wissen/` (01–05 Sicherheit, 06 Produktqualität).
+
+**Vor Baubeginn** in einem Satz festhalten, welche der neun Merkmale aus
+**ISO/IEC 25010:2023** binden und woran sie gemessen werden — nicht alle neun
+abhaken, sondern ableiten (ISO/IEC 25002). Was nicht bindet, wird benannt.
+
+🚩 **Fassung 2023, nicht 2011.** Usability heißt jetzt **Interaktionsfähigkeit**,
+Portability heißt **Flexibilität** (Skalierbarkeit gehört hinein), und
+**Betriebssicherheit (Safety)** ist neu. Die meisten Prüflisten im Netz stehen
+noch auf 2011.
+
+Die zehn Auflagen in Kurzform — jede stammt aus einem echten Vorfall:
+
+| | Auflage | Merkmal |
+|---|---|---|
+| B0 | Bindende Merkmale vor Baubeginn benennen | alle (25002) |
+| B1 | Jede Messung braucht eine **Positivkontrolle** | Zuverlässigkeit |
+| B2 | Eine Prüfung darf keinen Wert einfrieren, den die Welt ändern kann | Wartbarkeit |
+| B3 | Ein Bezeichner ist kein Verhalten — `grep`, ob ihn jemand **liest** | Funktionale Eignung |
+| B4 | Neues Kriterium gegen **Bestandsdaten** prüfen, nicht gegen Testdaten | Kompatibilität |
+| B5 | Umgebungsabhängiges nie am Quelltext belegen — `printenv` im Container | Flexibilität |
+| B6 | Kein Schritt ohne Rückweg; Produktion ist nie das Versuchsfeld | **Safety** |
+| B7 | Status wird gemessen, nie erinnert | Zurechenbarkeit |
+| B8 | Ein Speicher, der still altert, ist ein Fehler | Datenqualität (25012) |
+| B9 | Vor Baubeginn prüfen, ob eine andere Sitzung daran sitzt | Wartbarkeit |
+| B10 | Kundentext geht nie ungereinigt raus (siehe 3.) | Interaktionsfähigkeit |
+
+Für **Agenten, Personas und alles mit Sprachmodell** kommt **ISO/IEC 25059**
+dazu — insbesondere *Steuerbarkeit durch den Nutzer*: kann ein Mensch rechtzeitig
+eingreifen. Das ist die Frage, die im AVV-Gespräch gestellt wird.
+
+🪤 **Ehrlich bleiben:** Von zehn Auflagen sind zwei technisch erzwungen, der Rest
+ist Disziplin. Wer eine Auflage aufstellt, ohne einen Erzwinger dazuzubauen, hat
+die leichtere Hälfte der Arbeit gemacht. Das gilt auch für diese Tabelle.
+
+### 6. Diese Datei ist die Quelle — die Kopien werden erzeugt
 
 Der Block, den du gerade liest, steht in **einer** Datei und wird von dort in alle
 Werkzeug-Dateien geschrieben: Claude Code, Codex, Gemini, OpenCode, Aider, die Repos
