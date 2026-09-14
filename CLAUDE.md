@@ -91,7 +91,7 @@ Inhaltliche Änderungen an Anbieterdaten gehören nach `lib/legal.ts`, nicht in 
 Aktuell **keines**. Die Domain promptwerker.de parkt bei united-domains (Stand 31.07.2026), `render.yaml` beschreibt noch das alte WordPress-Setup. Ein Deploy-Ziel für die Next.js-App muss noch festgelegt werden.
 
 <!-- PFLICHTEN:ANFANG erzeugt von ops/pflichten-verteilen.py -->
-<!-- Quelle: ops/GEMEINSAME_PFLICHTEN.md · Stand 13ff7b6f5c -->
+<!-- Quelle: ops/GEMEINSAME_PFLICHTEN.md · Stand 90ea2a8e08 -->
 
 > **Dieser Abschnitt ist erzeugt, nicht geschrieben.** Wer ihn hier von Hand
 > aendert, verliert es beim naechsten Lauf. Aenderungen gehoeren in
@@ -180,7 +180,7 @@ Gilt für alles, was ein Mensch liest: Shop- und Produkttexte, Mails, Anzeigen,
 Landingpages, Blog/Outreach, Angebote, PDFs.
 
 ```bash
-S=/c/Users/Dell/.claude/skills/clean-user-facing-text/scripts
+S=/c/Users/Dell/.claude/skill-library/clean-user-facing-text/scripts
 python "$S/inspect_text.py" --json DATEI          # Exit 1 = Treffer, kein Fehler
 python "$S/clean_text.py" DATEI -o DATEI.cleaned --stats --no-normalize-spaces
 python "$S/inspect_text.py" --json DATEI.cleaned  # Gegenprobe: 0 Treffer
