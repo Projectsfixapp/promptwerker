@@ -91,7 +91,7 @@ Inhaltliche Änderungen an Anbieterdaten gehören nach `lib/legal.ts`, nicht in 
 Aktuell **keines**. Die Domain promptwerker.de parkt bei united-domains (Stand 31.07.2026), `render.yaml` beschreibt noch das alte WordPress-Setup. Ein Deploy-Ziel für die Next.js-App muss noch festgelegt werden.
 
 <!-- PFLICHTEN:ANFANG erzeugt von ops/pflichten-verteilen.py -->
-<!-- Quelle: ops/GEMEINSAME_PFLICHTEN.md · Stand 90ea2a8e08 -->
+<!-- Quelle: ops/GEMEINSAME_PFLICHTEN.md · Stand 931bfdeda8 -->
 
 > **Dieser Abschnitt ist erzeugt, nicht geschrieben.** Wer ihn hier von Hand
 > aendert, verliert es beim naechsten Lauf. Aenderungen gehoeren in
@@ -100,84 +100,49 @@ Aktuell **keines**. Die Domain promptwerker.de parkt bei united-domains (Stand 3
 
 ## Gemeinsame Pflichten für ALLE Modelle
 
-Gilt für Claude Code, Codex, Gemini CLI, Kimi, OpenCode, Aider und jeden Subagenten —
-auf dem PC, in den Repos und auf Server 2. Vollfassung mit Begründungen:
-`C:\Users\Dell\CLAUDE.md`. Bei Widerspruch gilt CLAUDE.md.
+Gilt für Claude Code, Codex, Gemini CLI, Kimi, OpenCode, Aider und jeden Subagenten — PC, Repos, Server 2. Vollfassung: `C:\Users\Dell\CLAUDE.md`; bei Widerspruch gilt sie.
 
-### 0. Wo der aktuelle Stand steht — nie hier hartkodieren
+### 0. Stand nie hier hartkodieren
 
-Dieser Block trägt **Regeln**, keine Zahlen. Jede Zahl, jeder Status und jeder
-Commit-Hash veraltet schneller, als verteilt werden kann. Der Stand steht hier:
+Hier stehen Regeln, keine Zahlen — Zahlen, Status und Hashes veralten schneller, als verteilt werden kann.
+- Wo stehen wir heute? → `~/.claude/projects/C--Users-Dell/memory/MEMORY.md` (erzeugt) + die `project_*.md` daneben
+- Was ist wahr, wie hängt es zusammen? → `C:\Users\Dell\second-brain\wiki\index.md`, dann `entities/`, `concepts/`
+- Was haben wir tief gelernt? → `icm.exe recall "<frage>"` (PowerShell: nie nacktes `icm`)
+- Welche Regel gilt? → diese Datei
 
-| Frage | Quelle |
-|---|---|
-| Wo stehen wir heute? | `~/.claude/projects/C--Users-Dell/memory/MEMORY.md` (erzeugt) und die `project_*.md` daneben |
-| Was ist wahr, wie hängt es zusammen? | `C:\Users\Dell\second-brain\wiki\index.md`, von dort in `entities/` und `concepts/` |
-| Was haben wir tief gelernt? | `icm.exe recall "<frage>"` (in PowerShell nie nacktes `icm`) |
-| Welche Regel gilt? | diese Datei |
-
-Im Vault trägt jede Seite genau einen Bereich als Tag: `bereich/geilstekerze` (pink),
-`bereich/mitfrauschmidt` (helles rosa), `bereich/onos` (rot), `bereich/allgemein` (blau).
-Wer eine Seite anlegt, setzt `bereich:` und `gehoert_zu:` und lässt danach
-`python scripts/index-bauen.py` laufen — sonst fehlt sie im Index, und der Index ist
-das, was die nächste Sitzung für vollständig hält.
+Jede Vault-Seite trägt genau einen Bereich-Tag: `bereich/geilstekerze` (pink), `bereich/mitfrauschmidt` (hellrosa), `bereich/onos` (rot), `bereich/allgemein` (blau). Neue Seite: `bereich:` + `gehoert_zu:` setzen, dann `python scripts/index-bauen.py` — sonst fehlt sie im Index, und den hält die nächste Sitzung für vollständig.
 
 ### 1. Gedächtnis — eine Bank, nie überschreiben
 
-- **ICM ist die strukturierte Datenbank** für alles über Dennis und die Projekte:
-  `C:\Users\Dell\AppData\Local\icm\bin\icm.exe` (in PowerShell **nie** nacktes `icm` —
-  das ist `Invoke-Command`). Suchen: `icm.exe recall "<frage>"` · Speichern: `icm.exe store -t <topic> -c "..." -i high`
-- **Speicherpflicht:** Fehler gelöst · Architektur-/Designentscheidung · Präferenz von Dennis
-  erkannt · Aufgabe abgeschlossen → sofort `store`, **bevor** geantwortet wird.
-- 🚨 **Nie eine Gedächtnisdatei oder -DB überschreiben.** Es laufen bis zu 5 Sitzungen
-  gleichzeitig. Regeln:
-  - Vor jedem Schreiben **frisch einlesen**, nie aus dem Kontext von vorhin schreiben.
-  - Dateien atomar schreiben: erst daneben, dann `os.replace`. Niemals `write_text` direkt —
-    das leert die Datei zuerst, und ein Fehler danach löscht sie.
-  - Datenbanken werden **gemergt, nicht kopiert**: über die ID-Menge vereinigen
-    (`INSERT OR IGNORE`), nie die eine über die andere legen. Werkzeug dafür:
-    `python C:\Users\Dell\ops\gedaechtnis-sync.py` (erst `--trocken` zum Ansehen).
-    Am 21.08. hat genau das zwei nur auf dem Server vorhandene Einträge gerettet,
-    darunter ein `critical`-Befund.
-- 🏗️ **MEMORY.md wird GEBAUT, nicht geschrieben (seit 23.08.2026).** Ein PreToolUse-Hook
-  blockt Write/Edit auf die Datei; von Hand geändert ist sie beim nächsten Bau wieder weg.
-  Änderungen gehören ins **Frontmatter der Quelldatei**, unter `metadata:`:
-
+- **ICM** = strukturierte DB zu Dennis und den Projekten: `C:\Users\Dell\AppData\Local\icm\bin\icm.exe` (PowerShell: nie nacktes `icm` = `Invoke-Command`). Suchen `icm.exe recall "<frage>"` · Speichern `icm.exe store -t <topic> -c "..." -i high`.
+- **Speicherpflicht:** Fehler gelöst · Architektur-/Designentscheidung · Präferenz von Dennis · Aufgabe fertig → sofort `store`, **bevor** geantwortet wird.
+- 🚨 **Nie eine Gedächtnisdatei/-DB überschreiben** (bis zu 5 Sitzungen parallel):
+  - vor jedem Schreiben **frisch einlesen**, nie aus altem Kontext;
+  - **atomar**: daneben schreiben, dann `os.replace` — nie `write_text` direkt (leert erst; Fehler danach = Datei weg);
+  - DBs **mergen statt kopieren** (ID-Vereinigung, `INSERT OR IGNORE`): `python C:\Users\Dell\ops\gedaechtnis-sync.py` (erst `--trocken`). Rettete am 21.08. zwei nur auf dem Server vorhandene Einträge, darunter einen `critical`-Befund.
+- 🏗️ **MEMORY.md wird GEBAUT** (seit 23.08.2026): PreToolUse-Hook blockt Write/Edit, Handänderungen sind beim nächsten Bau weg. Ändern im Frontmatter der Quelldatei unter `metadata:`, dann `python C:\Users\Dell\ops\router-bauen.py`:
   ```
-  router_prio:   akut | aktiv | ruhend     # fehlt = automatisch nach Alter (10 Tage)
+  router_prio:   akut | aktiv | ruhend     # fehlt = nach Alter (10 Tage)
   router_gruppe: onos | mfs | geilstekerze | infra | nebenprojekte | regeln
   router_falle:  "eine Zeile Risiko"
   router_label:  "Kurzname"
   ```
-  Danach `python C:\Users\Dell\ops\router-bauen.py`. Der feste Kopf steht in
-  `C:\Users\Dell\ops\router-kopf.md`. Notausgang: `MEMORY_ROUTER_GUARD=aus`.
-  Warum: fester Deckel über wachsender Fläche ist ein Rechenproblem — der Generator kappt
-  selbst auf 20 KB, und eine abgeleitete Datei kann eine Parallel-Sitzung nicht zerschießen.
-- Commit-Hashes, Testzahlen, CI-Nummern gehören in die jeweilige `project_*.md` — im Router
-  veralten sie und führen die nächste Sitzung in die Irre.
+  Fester Kopf: `C:\Users\Dell\ops\router-kopf.md`. Notausgang `MEMORY_ROUTER_GUARD=aus`. Grund: fester Deckel über wachsender Fläche ist ein Rechenproblem — der Generator kappt selbst auf 20 KB, und eine abgeleitete Datei kann keine Parallel-Sitzung zerschießen.
+- Commit-Hashes, Testzahlen, CI-Nummern → jeweilige `project_*.md`, nie in den Router (dort veralten sie und führen in die Irre).
 
 ### 2. Second Brain / Wiki — Pflegepflicht
 
-`C:\Users\Dell\second-brain\wiki\` wird **mitgeschrieben**, nicht nur gelesen.
+`C:\Users\Dell\second-brain\wiki\` wird **mitgeschrieben**, nicht nur gelesen:
+- neue Entität (Firma, Werkzeug, Person, Produkt, Kanal) → Seite unter `wiki\entities\`
+- neues Konzept, Richtungs-/Architekturentscheidung → Seite unter `wiki\concepts\`
+- Annahme widerlegt → Seite korrigieren, alte Aussage nicht stehen lassen
+- Tagesstatus (Deploy, Testlauf, Hash, CI-Nummer) → **nicht ins Vault**, sondern ICM
 
-| Auslöser | Was tun |
-|---|---|
-| Neue Entität (Firma, Werkzeug, Person, Produkt, Kanal) | Seite unter `wiki\entities\` |
-| Neues Konzept, Richtungs-/Architekturentscheidung | Seite unter `wiki\concepts\` |
-| Annahme widerlegt | betroffene Seite korrigieren, alte Aussage nicht stehen lassen |
-| Tagesstatus (Deploy, Testlauf, Hash, CI-Nummer) | **nicht ins Vault** — das gehört in ICM |
-
-Immer: `updated:` im Frontmatter auf heute, Zeile in `wiki\log.md`, und **committen** —
-das Vault hat keinen Autocommit-Hook:
-`git -C C:\Users\Dell\second-brain add -A && git commit -m "Wiki: <was>"`
-
-Trennlinie: **Vault** = langlebige Zusammenhänge. **ICM** = Tiefenwissen und Live-Stand.
-Nie denselben Inhalt in beide.
+Immer: `updated:` auf heute, Zeile in `wiki\log.md`, **committen** (kein Autocommit-Hook): `git -C C:\Users\Dell\second-brain add -A && git commit -m "Wiki: <was>"`. Vault = langlebige Zusammenhänge, ICM = Tiefenwissen + Live-Stand; nie derselbe Inhalt in beiden.
 
 ### 3. Text-Hygiene — MANDATORY bei jedem Kundentext
 
-Gilt für alles, was ein Mensch liest: Shop- und Produkttexte, Mails, Anzeigen,
-Landingpages, Blog/Outreach, Angebote, PDFs.
+Alles, was ein Mensch liest: Shop-/Produkttexte, Mails, Anzeigen, Landingpages, Blog/Outreach, Angebote, PDFs.
 
 ```bash
 S=/c/Users/Dell/.claude/skill-library/clean-user-facing-text/scripts
@@ -186,42 +151,27 @@ python "$S/clean_text.py" DATEI -o DATEI.cleaned --stats --no-normalize-spaces
 python "$S/inspect_text.py" --json DATEI.cleaned  # Gegenprobe: 0 Treffer
 ```
 
-Ohne die Gegenprobe gilt der Text als ungereinigt. Nicht anfassen: Code, Befehle, Pfade,
-IDs, Formeln, Zitate, Preise, Pflichtangaben (Impressum, Widerruf, DSGVO).
-Binärdateien (PDF/DOCX/Bilder) nie durch die Textskripte jagen — dafür `remove-ai-marks`.
+Ohne Gegenprobe = ungereinigt. Nicht anfassen: Code, Befehle, Pfade, IDs, Formeln, Zitate, Preise, Pflichtangaben (Impressum, Widerruf, DSGVO). Binärdateien (PDF/DOCX/Bilder) nie durch die Textskripte — dafür `remove-ai-marks`.
 
 ### 4. Status nie behaupten, immer messen
 
-Git-Stand, Serverstand, „ist deployed", „ist erledigt" — **nur nach echter Prüfung**,
-nie aus dem Gedächtnis. Jede Routen- oder Containermessung braucht eine **Positivkontrolle**
-(ein Pfad, der bekannt fehlschlägt), sonst misst du den falschen Host.
-Umgebungsabhängiges nie am Quelltext belegen, immer `printenv` im Container.
+Git-/Serverstand, „ist deployed", „ist erledigt" nur nach echter Prüfung, nie aus dem Gedächtnis. Jede Routen-/Containermessung braucht eine **Positivkontrolle** (ein Pfad, der bekannt fehlschlägt), sonst misst du den falschen Host. Umgebungsabhängiges nie am Quelltext belegen — `printenv` im Container.
 
 ### 5. Bauauflage — immer mit den Normen bauen
 
-Gilt für **jeden** Bau, in jedem Projekt, ohne Auslöser (Dennis, 08.09.2026:
-„immer mit den Normen bauen wie ON.OS gebaut wurde"). Vollfassung mit Befunden
-und Erzwingern: `C:\Users\Dell\ops\BAUAUFLAGE.md`. Normwissen:
-`~/.claude/agents/iso-auditor-wissen/` (01–05 Sicherheit, 06 Produktqualität).
+Jeder Bau, jedes Projekt, ohne Auslöser (Dennis 08.09.2026: „immer mit den Normen bauen wie ON.OS gebaut wurde"). Vollfassung mit Befunden und Erzwingern: `C:\Users\Dell\ops\BAUAUFLAGE.md`. Normwissen: `~/.claude/agents/iso-auditor-wissen/` (01–05 Sicherheit, 06 Produktqualität).
 
-**Vor Baubeginn** in einem Satz festhalten, welche der neun Merkmale aus
-**ISO/IEC 25010:2023** binden und woran sie gemessen werden — nicht alle neun
-abhaken, sondern ableiten (ISO/IEC 25002). Was nicht bindet, wird benannt.
+**Vor Baubeginn** in einem Satz: welche der neun Merkmale aus **ISO/IEC 25010:2023** binden und woran sie gemessen werden — ableiten (ISO/IEC 25002), nicht alle abhaken; Nichtbindendes benennen. 🚩 **Fassung 2023, nicht 2011:** Usability → **Interaktionsfähigkeit**, Portability → **Flexibilität** (inkl. Skalierbarkeit), **Betriebssicherheit (Safety)** ist neu. Die meisten Prüflisten im Netz stehen noch auf 2011.
 
-🚩 **Fassung 2023, nicht 2011.** Usability heißt jetzt **Interaktionsfähigkeit**,
-Portability heißt **Flexibilität** (Skalierbarkeit gehört hinein), und
-**Betriebssicherheit (Safety)** ist neu. Die meisten Prüflisten im Netz stehen
-noch auf 2011.
-
-Die zehn Auflagen in Kurzform — jede stammt aus einem echten Vorfall:
+Zehn Auflagen, jede aus einem echten Vorfall:
 
 | | Auflage | Merkmal |
 |---|---|---|
 | B0 | Bindende Merkmale vor Baubeginn benennen | alle (25002) |
 | B1 | Jede Messung braucht eine **Positivkontrolle** | Zuverlässigkeit |
-| B2 | Eine Prüfung darf keinen Wert einfrieren, den die Welt ändern kann | Wartbarkeit |
+| B2 | Keine Prüfung friert einen Wert ein, den die Welt ändern kann | Wartbarkeit |
 | B3 | Ein Bezeichner ist kein Verhalten — `grep`, ob ihn jemand **liest** | Funktionale Eignung |
-| B4 | Neues Kriterium gegen **Bestandsdaten** prüfen, nicht gegen Testdaten | Kompatibilität |
+| B4 | Neues Kriterium gegen **Bestandsdaten** prüfen, nicht Testdaten | Kompatibilität |
 | B5 | Umgebungsabhängiges nie am Quelltext belegen — `printenv` im Container | Flexibilität |
 | B6 | Kein Schritt ohne Rückweg; Produktion ist nie das Versuchsfeld | **Safety** |
 | B7 | Status wird gemessen, nie erinnert | Zurechenbarkeit |
@@ -229,29 +179,15 @@ Die zehn Auflagen in Kurzform — jede stammt aus einem echten Vorfall:
 | B9 | Vor Baubeginn prüfen, ob eine andere Sitzung daran sitzt | Wartbarkeit |
 | B10 | Kundentext geht nie ungereinigt raus (siehe 3.) | Interaktionsfähigkeit |
 
-Für **Agenten, Personas und alles mit Sprachmodell** kommt **ISO/IEC 25059**
-dazu — insbesondere *Steuerbarkeit durch den Nutzer*: kann ein Mensch rechtzeitig
-eingreifen. Das ist die Frage, die im AVV-Gespräch gestellt wird.
+Für **Agenten, Personas und alles mit Sprachmodell** zusätzlich **ISO/IEC 25059**, v. a. *Steuerbarkeit durch den Nutzer*: kann ein Mensch rechtzeitig eingreifen — die Frage im AVV-Gespräch.
 
-🪤 **Ehrlich bleiben:** Von zehn Auflagen sind zwei technisch erzwungen, der Rest
-ist Disziplin. Wer eine Auflage aufstellt, ohne einen Erzwinger dazuzubauen, hat
-die leichtere Hälfte der Arbeit gemacht. Das gilt auch für diese Tabelle.
+🪤 **Ehrlich bleiben:** Nur zwei der zehn Auflagen sind technisch erzwungen, der Rest ist Disziplin. Eine Auflage ohne Erzwinger ist die leichtere Hälfte der Arbeit — das gilt auch für diese Tabelle.
 
 ### 6. Diese Datei ist die Quelle — die Kopien werden erzeugt
 
-Der Block, den du gerade liest, steht in **einer** Datei und wird von dort in alle
-Werkzeug-Dateien geschrieben: Claude Code, Codex, Gemini, OpenCode, Aider, die Repos
-und Server 2. Wer ihn dort ändert, verliert es beim nächsten Lauf.
+Dieser Block steht in **einer** Datei und wird in alle Werkzeug-Dateien geschrieben (Claude Code, Codex, Gemini, OpenCode, Aider, Repos, Server 2); wer ihn dort ändert, verliert es beim nächsten Lauf.
+- Ändern: `C:\Users\Dell\ops\GEMEINSAME_PFLICHTEN.md` · Verteilen: `python C:\Users\Dell\ops\pflichten-verteilen.py` (`--alles` inkl. Server 2) · Prüfen ohne Schreiben: `--pruefen` (Exit 1 = Drift) · Neues Werkzeug: eine Zeile in `ops/pflichten-ziele.json`, nicht kopieren.
 
-- Ändern: `C:\Users\Dell\ops\GEMEINSAME_PFLICHTEN.md`
-- Verteilen: `python C:\Users\Dell\ops\pflichten-verteilen.py` (`--alles` inkl. Server 2)
-- Prüfen ohne zu schreiben: `... --pruefen` (Exit 1 = Drift)
-- Neues Werkzeug: eine Zeile in `ops/pflichten-ziele.json`, nicht kopieren
-
-Verteilt wird bei jedem Claude-Sitzungsstart (Hook `brain-guard.sh`, PC + Repos) und
-einmal täglich vollständig inklusive Server 2 (geplante Aufgabe `Pflichten-Abgleich`).
-Warum erzeugt statt gepflegt: am 07.09.2026 existierte dieser Text fünfmal, alle Kopien
-trugen „Stand 21.08." und waren bereits inhaltlich auseinandergelaufen. Eine Regel in
-vier Fassungen ist keine Regel mehr, sondern vier Meinungen.
+Verteilt bei jedem Claude-Start (Hook `brain-guard.sh`, PC + Repos) und täglich komplett inkl. Server 2 (Aufgabe `Pflichten-Abgleich`). Grund: am 07.09.2026 gab es den Text fünfmal, alle „Stand 21.08.", inhaltlich auseinandergelaufen — eine Regel in vier Fassungen ist keine Regel, sondern vier Meinungen.
 
 <!-- PFLICHTEN:ENDE -->
