@@ -192,3 +192,186 @@ h3 {
   }
 }
 
+
+/* ===== Speaker-Seite /dennis-beichert =====================================
+   Eigene Farbwelt nur innerhalb von .sp-buehne: Anthrazit, Neon-Lime,
+   Neonblau. Bewegung kommt NICHT von hier, sondern aus lib/motion.ts
+   (gleiche DNA wie die Startseite). Hier stehen nur Farben, Flächen und
+   Knopf-Geometrie. Abgrenzung zu Wettbewerbern: kein Schwarz, keine
+   Lime-Textmarker, Blau als gleichwertiger zweiter Akzent
+   (docs/speaker/DESIGN_SYSTEM.md). */
+.sp-buehne {
+  --sp-bg: #242a32;
+  --sp-bg-raised: #303740;
+  --sp-bg-soft: #3a414a;
+  --sp-text: #f0f3f5;
+  --sp-muted: #b9c3cd;
+  --sp-lime: #b8ff35;
+  --sp-blue: #168dff;
+  --sp-stroke: #59616b;
+  --sp-ink-on-lime: #1b2026;
+  /* Textvarianten für kleine Schrift (WCAG AA >= 4,5:1 auf allen drei Flächen,
+     nachgerechnet 09.11.2026). #168DFF und #59616B bleiben für Rahmen/Großtext. */
+  --sp-blue-text: #6bb5ff;
+  --sp-ziffer: #98a1ab;
+  background: var(--sp-bg);
+  color: var(--sp-text);
+}
+
+.sp-display {
+  font-family: var(--font-archivo-black), "Arial Black", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.92;
+}
+
+.sp-label {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sp-rule {
+  border-top: 1px solid var(--sp-stroke);
+}
+
+/* Primärknopf: Lime-Fläche mit abgeschnittener Ecke + abgesetzte Pfeil-Zelle.
+   Die Form liegt auf ::before, damit der globale Fokusring (outline) nicht
+   von clip-path abgeschnitten wird. Hover = scale(1.03) wie alle CTAs der
+   Startseite (hover:scale-[1.03], transition-transform). */
+.sp-btn-primary {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: stretch;
+  min-height: 48px;
+  color: var(--sp-ink-on-lime);
+  font-family: var(--font-card-body);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+.sp-btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0 52px 0 0;
+  z-index: -1;
+  background: var(--sp-lime);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+}
+.sp-btn-primary > .sp-btn-text {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1.4rem;
+  margin-right: 4px;
+}
+.sp-btn-primary > .sp-btn-zelle {
+  display: inline-flex;
+  width: 48px;
+  align-items: center;
+  justify-content: center;
+  background: var(--sp-lime);
+  color: var(--sp-ink-on-lime);
+}
+
+/* Sekundärknopf: Blau als Rahmen, asymmetrisch (links 4 px, sonst 1,5 px). */
+.sp-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 1.4rem;
+  border: 1.5px solid var(--sp-blue);
+  border-left-width: 5px;
+  color: var(--sp-text);
+  font-family: var(--font-card-body);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 0;
+  transition: background-color 200ms ease-out, transform 150ms;
+}
+.sp-btn-secondary:hover {
+  background: rgba(22, 141, 255, 0.14);
+}
+
+/* Text-CTA: Linie + kleiner Pfeil, der bei Hover/Fokus nach rechts rückt. */
+.sp-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--sp-text);
+  font-family: var(--font-card-body);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-decoration-color: var(--sp-lime);
+  text-underline-offset: 6px;
+  text-decoration-thickness: 2px;
+}
+.sp-link .sp-pfeil {
+  color: var(--sp-lime);
+  transition: transform 200ms ease-out;
+}
+.sp-link:hover .sp-pfeil,
+.sp-link:focus-visible .sp-pfeil {
+  transform: translateX(4px);
+}
+
+/* Bildrahmen: Lime-Winkel oben links, Blau-Winkel unten rechts. */
+.sp-rahmen {
+  position: relative;
+}
+.sp-rahmen::before,
+.sp-rahmen::after {
+  content: "";
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  pointer-events: none;
+  z-index: 2;
+}
+.sp-rahmen::before {
+  top: -10px;
+  left: -10px;
+  border-top: 3px solid var(--sp-lime);
+  border-left: 3px solid var(--sp-lime);
+}
+.sp-rahmen::after {
+  bottom: -10px;
+  right: -10px;
+  border-bottom: 3px solid var(--sp-blue);
+  border-right: 3px solid var(--sp-blue);
+}
+
+/* Formularfelder auf Anthrazit. */
+.sp-feld {
+  width: 100%;
+  min-height: 48px;
+  border: 1.5px solid var(--sp-stroke);
+  border-radius: 0;
+  background: var(--sp-bg-raised);
+  padding: 0.65rem 0.9rem;
+  color: var(--sp-text);
+  font-family: var(--font-card-body);
+  font-size: 0.95rem;
+}
+.sp-feld:hover {
+  border-color: #7a838e;
+}
+.sp-feld:focus {
+  border-color: var(--sp-blue);
+}
+.sp-feld option {
+  background: var(--sp-bg-raised);
+  color: var(--sp-text);
+}
+.sp-feld::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}

@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: baseUrl, changeFrequency: "weekly", priority: 1 },
     { url: `${baseUrl}/ueber-uns`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/dennis-beichert`, changeFrequency: "monthly", priority: 0.8 },
     {
       url: `${baseUrl}/leistungen/workshop-roadmap`,
       changeFrequency: "monthly",

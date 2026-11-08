@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import type { Topic } from "@/lib/topics";
+import { federEintritt, hoverAnheben, seitenEintrittVersatz, viewportEinmal } from "@/lib/motion";
 
 export default function TopicCard({
   topic,
@@ -10,15 +11,15 @@ export default function TopicCard({
   topic: Topic;
   onOpen: (id: string) => void;
 }) {
-  const offsetX = topic.side === "right" ? 48 : -48;
+  const offsetX = topic.side === "right" ? seitenEintrittVersatz : -seitenEintrittVersatz;
 
   return (
     <motion.div
       initial={{ opacity: 0, x: offsetX }}
       whileInView={{ opacity: 1, x: 0 }}
-      whileHover={{ y: -4, scale: 1.015, transition: { duration: 0.25, ease: "easeOut" } }}
-      viewport={{ once: true, amount: 0.4 }}
-      transition={{ type: "spring", stiffness: 90, damping: 18 }}
+      whileHover={hoverAnheben}
+      viewport={viewportEinmal}
+      transition={federEintritt}
       className={`glass-panel w-full max-w-md rounded-2xl p-7 transition-[box-shadow,border-color] duration-300 hover:border-accent/60 hover:shadow-[0_0_55px_14px_rgba(56,217,255,0.32)] ${
         topic.side === "right" ? "ml-auto" : "mr-auto"
       }`}

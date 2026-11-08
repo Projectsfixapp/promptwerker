@@ -13,6 +13,7 @@ type PageMeta = {
   short: string;
   detail: string[];
   cta: string;
+  querverweis?: { frage: string; label: string; href: string };
 };
 
 function getAllPageMetas(): PageMeta[] {
@@ -29,6 +30,7 @@ function getAllPageMetas(): PageMeta[] {
       short: c.blurb,
       detail: c.detail ?? [],
       cta: c.cta ?? "Kostenloses Analysegespräch buchen",
+      querverweis: c.querverweis,
     }));
 
   return [...fromTopics, ...fromCards];
@@ -135,6 +137,19 @@ export default async function LeistungPage(props: { params: Promise<{ slug: stri
             {meta.cta}
           </Link>
         </div>
+
+        {/* Abzweig, z. B. Schulungen → Speaker-Seite (querverweis in bottomCards.ts) */}
+        {meta.querverweis && (
+          <p className="mt-8 text-sm text-body">
+            {meta.querverweis.frage}{" "}
+            <Link
+              href={meta.querverweis.href}
+              className="inline-flex min-h-[44px] items-center gap-1 font-semibold text-accent underline-offset-4 hover:underline"
+            >
+              {meta.querverweis.label} <span aria-hidden="true">→</span>
+            </Link>
+          </p>
+        )}
       </section>
 
       {/* Problem */}

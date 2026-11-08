@@ -2,6 +2,7 @@
 
 import { useId, useState, type FormEvent } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { anbieter } from "@/lib/legal";
 
 /* Kontaktformular im Seitenfuß.
@@ -28,6 +29,7 @@ const labelKlasse =
 export default function FooterContactForm() {
   const id = useId();
   const [status, setStatus] = useState<Status>({ art: "leer" });
+  const pfad = usePathname();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -77,6 +79,33 @@ export default function FooterContactForm() {
         text: "Keine Verbindung zum Server. Bitte prüfe deine Internetverbindung.",
       });
     }
+  }
+
+  /* Auf der Speaker-Seite steht direkt darüber das Speaker-Formular. Ein
+     zweites, allgemeines Formular wäre eine konkurrierende Anfrage-Strecke —
+     hier deshalb nur ein Verweis. Alle anderen Seiten: unverändert. */
+  if (pfad === "/dennis-beichert") {
+    return (
+      <section aria-labelledby={`${id}-titel`} className="w-full max-w-md">
+        <h2 id={`${id}-titel`} className="text-lg text-[color:var(--color-paper-ink)]">
+          Keynote anfragen
+        </h2>
+        <p className="mt-2 font-card-body text-sm leading-relaxed text-[color:var(--color-paper-body)]">
+          Für Vortrags- und Keynote-Anfragen nutze bitte das Speaker-Formular. Für alle anderen
+          Fragen zu promptwerker erreichst du uns unter{" "}
+          <a href={`mailto:${anbieter.email}`} className="text-[color:var(--color-accent-deep)] underline underline-offset-2">
+            {anbieter.email}
+          </a>
+          .
+        </p>
+        <a
+          href="#anfrage"
+          className="mt-5 inline-flex min-h-[44px] items-center rounded-full bg-[color:var(--color-accent-deep)] px-6 py-3 font-card-body text-sm font-semibold text-white transition-transform hover:scale-[1.03]"
+        >
+          Zum Speaker-Formular
+        </a>
+      </section>
+    );
   }
 
   return (

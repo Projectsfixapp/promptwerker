@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { kreisRevealUebergang } from "@/lib/motion";
 import { anbieter } from "@/lib/legal";
 
 /* Kontakt-Overlay hinter den CTA-Knöpfen.
@@ -113,7 +114,7 @@ export default function ContactFormReveal({
       initial={{ clipPath: circle("0%") }}
       animate={{ clipPath: circle("150%") }}
       exit={{ clipPath: circle("0%") }}
-      transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+      transition={kreisRevealUebergang}
       className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 px-6 backdrop-blur-sm"
     >
       <div

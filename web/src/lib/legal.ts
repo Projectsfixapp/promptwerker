@@ -34,7 +34,7 @@ export const baseUrl = `https://${domain}`;
 
 /* Fassungsdatum der Rechtstexte. Bei inhaltlicher Änderung hochsetzen —
    der Stand wird unter jedem Rechtstext ausgegeben. */
-export const rechtsstand = "31. Juli 2026";
+export const rechtsstand = "8. November 2026";
 
 export const hoster = {
   name: "Hetzner Online GmbH",

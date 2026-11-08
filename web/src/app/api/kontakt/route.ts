@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { SmtpNichtKonfiguriertError, sendeKontaktAnfrage } from "@/lib/mailer";
+import { pruefeSpeakerFelder, type SpeakerFelder } from "@/lib/speakerAnfrage";
+import { talkTitel } from "@/lib/speaker";
 
 export const runtime = "nodejs";
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+/* Keine Trenn- oder Klammerzeichen: sonst könnte eine „Adresse“ mit Komma im
+   Reply-To zu einer Adressliste werden (Antworten an Dritte). */
+const EMAIL_PATTERN = /^[^\s@,;<>"()]+@[^\s@,;<>"()]+\.[^\s@,;<>"()]+$/;
 
 /* Einfache Mengenbegrenzung je IP im Arbeitsspeicher.
    Bewusst kein Redis: die Seite läuft auf einer Instanz, und der einzige
@@ -84,6 +88,18 @@ export async function POST(request: Request) {
     );
   }
 
+  /* Speaker-/Keynote-Anfrage von /dennis-beichert: gleiche Route, gleicher
+     Schutz, aber eigener Typ mit Pflicht-Eventfeldern. Ohne anfrageTyp
+     verhält sich die Route exakt wie vorher. */
+  let speaker: SpeakerFelder | undefined;
+  if (daten.anfrageTyp === "speaker") {
+    const geprueft = pruefeSpeakerFelder(daten, talkTitel);
+    if (!geprueft.ok) {
+      return NextResponse.json({ error: geprueft.fehler }, { status: 400 });
+    }
+    speaker = geprueft.felder;
+  }
+
   if (rateLimitUeberschritten(ermittleIp(request))) {
     return NextResponse.json(
       { error: "Zu viele Anfragen. Bitte versuche es später erneut." },
@@ -98,6 +114,7 @@ export async function POST(request: Request) {
       unternehmen: unternehmen || undefined,
       telefon: telefon || undefined,
       nachricht,
+      speaker,
     });
     return NextResponse.json({ ok: true });
   } catch (err) {

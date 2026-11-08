@@ -21,6 +21,7 @@ Einzelunternehmen von Dennis Beichert (better than e-commerce D. Beichert), Sitz
 ## Über
 
 - [Über uns](https://promptwerker.de/ueber-uns): Wer promptwerker ist und wie an echten Fällen aus dem Kundenbetrieb gearbeitet wird.
+- [Dennis Beichert als Speaker](https://promptwerker.de/dennis-beichert): Keynotes des Gründers zu KI-Agenten, KI im Mittelstand, E-Commerce mit KI und Datenhoheit; Unternehmer und KI-Praktiker ohne Informatikstudium, mit Praxisbeispielen und ehrlichem Projektstatus. Buchungsanfrage direkt auf der Seite.
 
 ## Rechtliches und Transparenz
 

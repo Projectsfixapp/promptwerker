@@ -116,6 +116,14 @@ export default function DatenschutzPage() {
           Ihrer Anfrage.
         </p>
         <p>
+          Für Vortrags- und Keynote-Anfragen gibt es auf der Seite /dennis-beichert ein eigenes
+          Formular. Dort verarbeiten wir zusätzlich die Organisation, die Art und das Format der
+          Veranstaltung (vor Ort, online oder hybrid) sowie, soweit Sie diese angeben, Ort, Datum,
+          erwartete Teilnehmerzahl und Wunschthema. Zweck ist die Prüfung und Planung des
+          angefragten Vortrags; Übermittlung, Speicherung und Löschung erfolgen wie unten
+          beschrieben.
+        </p>
+        <p>
           Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage auf den Abschluss
           oder die Durchführung eines Vertrags gerichtet ist, im Übrigen Art. 6 Abs. 1 lit. f
           DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen).
