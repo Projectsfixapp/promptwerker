@@ -14,6 +14,8 @@ export type BottomCard = {
   demoHref?: string;
   /** Beschriftung des Demo-Knopfs. Ohne Angabe: "Live-Demo ansehen". */
   demoLabel?: string;
+  /** Optionaler Abzweig unter dem Hero der Leistungsseite (z. B. Schulungen → Speaker). */
+  querverweis?: { frage: string; label: string; href: string };
 };
 
 // Neue Karte hinzufügen: Objekt nach diesem Schema unten anhängen.
@@ -83,6 +85,11 @@ export const bottomCards: BottomCard[] = [
     hasPage: true,
     eyebrow: "Weiterbildung",
     cta: "Schulung anfragen",
+    querverweis: {
+      frage: "Keynote für Konferenz oder Firmenevent gesucht?",
+      label: "Dennis Beichert als Speaker",
+      href: "/dennis-beichert",
+    },
     detail: [
       "Das beste KI-System bringt wenig, wenn das Team es nicht versteht oder ihm nicht vertraut — Akzeptanz entscheidet über den tatsächlichen Nutzen.",
       "Unsere Schulungen sind praxisnah: keine abstrakten KI-Grundlagen, sondern konkrete Werkzeuge und Abläufe aus eurem Arbeitsalltag.",

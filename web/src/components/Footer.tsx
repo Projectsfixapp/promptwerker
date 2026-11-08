@@ -23,6 +23,7 @@ const rechtliches = [
 const unternehmen = [
   { href: "/", label: "Start" },
   { href: "/ueber-uns", label: "Über uns" },
+  { href: "/dennis-beichert", label: "Dennis als Speaker" },
   { href: "/leistungen/workshop-roadmap", label: "Workshop: Roadmap" },
   { href: "/?kontakt=1", label: "Analysegespräch buchen" },
 ];

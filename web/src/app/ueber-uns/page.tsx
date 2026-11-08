@@ -107,6 +107,12 @@ export default function UeberUnsPage() {
               Du sprichst direkt mit der Person, die dein Projekt auch umsetzt — kein Wechsel
               durch mehrere Ansprechpartner.
             </p>
+            <Link
+              href="/dennis-beichert"
+              className="mt-3 inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-accent underline-offset-4 hover:underline"
+            >
+              Dennis auch als Keynote-Speaker erleben <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </div>
       </section>

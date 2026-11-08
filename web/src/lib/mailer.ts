@@ -1,5 +1,6 @@
 import nodemailer, { type Transporter } from "nodemailer";
 import { anbieter } from "./legal";
+import type { SpeakerFelder } from "./speakerAnfrage";
 
 /* SMTP-Versand für das Kontaktformular im Seitenfuß.
    Bewusst ohne Datenbank: die Anfrage geht direkt ins Postfach
@@ -52,6 +53,8 @@ export type KontaktAnfrage = {
   unternehmen?: string;
   telefon?: string;
   nachricht: string;
+  /** Gesetzt bei Speaker-/Keynote-Anfragen von /dennis-beichert. */
+  speaker?: SpeakerFelder;
 };
 
 function escapeHtml(wert: string): string {
@@ -75,7 +78,21 @@ export async function sendeKontaktAnfrage(anfrage: KontaktAnfrage): Promise<void
   const empfaenger = process.env.KONTAKT_EMPFAENGER ?? anbieter.email;
 
   const name = einzeilig(anfrage.name);
+  const sp = anfrage.speaker;
+  const speakerZeilen: [string, string][] = sp
+    ? ([
+        ["Anfrage-Typ", "Speaker / Keynote"],
+        ["Organisation", sp.organisation],
+        ["Veranstaltung", sp.eventTyp],
+        ["Format", sp.format],
+        ["Ort", sp.ort ?? ""],
+        ["Datum", sp.datum ?? ""],
+        ["Publikum", sp.publikum ?? ""],
+        ["Wunschthema", sp.thema ?? ""],
+      ].filter(([, wert]) => wert) as [string, string][]).map(([k, w]) => [k, einzeilig(w)])
+    : [];
   const zeilen = [
+    ...speakerZeilen.map(([k, w]) => `${k}: ${w}`),
     `Name: ${name}`,
     `E-Mail: ${einzeilig(anfrage.email)}`,
     anfrage.unternehmen ? `Unternehmen: ${einzeilig(anfrage.unternehmen)}` : null,
@@ -88,12 +105,17 @@ export async function sendeKontaktAnfrage(anfrage: KontaktAnfrage): Promise<void
     from: `"promptwerker Website" <${absender}>`,
     to: empfaenger,
     // Antworten landen direkt beim Absender statt im eigenen Postfach.
-    replyTo: `${name} <${einzeilig(anfrage.email)}>`,
-    subject: `Kontaktanfrage über promptwerker.de — ${name}`,
+    // Als Objekt: nodemailer quotet den Namen selbst, ein Komma im Namen
+    // erzeugt so keine zweite Adresse.
+    replyTo: { name, address: einzeilig(anfrage.email) },
+    subject: sp
+      ? `Speaker-/Keynote-Anfrage über promptwerker.de — ${name} (${einzeilig(sp.organisation)})`
+      : `Kontaktanfrage über promptwerker.de — ${name}`,
     text: zeilen.join("\n"),
     html: `<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#15121b">
-  <p style="margin:0 0 16px"><strong>Neue Kontaktanfrage über promptwerker.de</strong></p>
+  <p style="margin:0 0 16px"><strong>${sp ? "Neue Speaker-/Keynote-Anfrage über promptwerker.de/dennis-beichert" : "Neue Kontaktanfrage über promptwerker.de"}</strong></p>
   <table style="border-collapse:collapse">
+    ${speakerZeilen.map(([k, w]) => `<tr><td style="padding:2px 12px 2px 0;color:#55506a">${escapeHtml(k)}</td><td style="padding:2px 0">${escapeHtml(w)}</td></tr>`).join("")}
     <tr><td style="padding:2px 12px 2px 0;color:#55506a">Name</td><td style="padding:2px 0">${escapeHtml(name)}</td></tr>
     <tr><td style="padding:2px 12px 2px 0;color:#55506a">E-Mail</td><td style="padding:2px 0">${escapeHtml(anfrage.email)}</td></tr>
     ${anfrage.unternehmen ? `<tr><td style="padding:2px 12px 2px 0;color:#55506a">Unternehmen</td><td style="padding:2px 0">${escapeHtml(anfrage.unternehmen)}</td></tr>` : ""}

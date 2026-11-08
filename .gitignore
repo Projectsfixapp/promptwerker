@@ -7,3 +7,9 @@ wp-content/uploads/
 .qa-tools/node_modules/
 .qa-tools/*.png
 .impeccable/
+
+# Speaker-Seite: Recherche (fremde Screenshots, Wettbewerbsstrategie) und
+# interne Freigabeliste bleiben lokal — dieses Repo ist öffentlich.
+docs/speaker/research/
+docs/speaker/qa/
+docs/speaker/CONTENT_NEEDED.md

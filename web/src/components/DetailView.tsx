@@ -1,18 +1,9 @@
 "use client";
 
 import { motion } from "motion/react";
-import type { Variants } from "motion/react";
 import type { Topic } from "@/lib/topics";
+import { inhaltStaffel as contentVariants, panelUebergang } from "@/lib/motion";
 import BackButton from "./BackButton";
-
-const contentVariants: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  show: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: 0.22 + i * 0.06, duration: 0.4, ease: "easeOut" },
-  }),
-};
 
 export default function DetailView({
   topic,
@@ -29,7 +20,7 @@ export default function DetailView({
       initial={{ x: fromSide }}
       animate={{ x: 0 }}
       exit={{ x: fromSide }}
-      transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+      transition={panelUebergang}
       className="fixed inset-0 z-30 overflow-y-auto"
     >
       <div className="glass-panel min-h-full px-6 py-16">

@@ -151,6 +151,13 @@ export default function Nav() {
           Über uns
         </Link>
         <Link
+          href="/dennis-beichert"
+          aria-current={istAktiv("/dennis-beichert") ? "page" : undefined}
+          className="rounded-full px-4 py-2 text-sm font-semibold text-ink transition-colors hover:text-accent aria-[current=page]:text-accent"
+        >
+          Speaker
+        </Link>
+        <Link
           href="/?kontakt=1"
           className="ml-1 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-ink transition-transform hover:scale-[1.03]"
         >
@@ -219,6 +226,13 @@ export default function Nav() {
                 className="block rounded-xl px-3 py-2.5 text-sm font-semibold text-ink hover:bg-white/10 aria-[current=page]:text-accent"
               >
                 Über uns
+              </Link>
+              <Link
+                href="/dennis-beichert"
+                aria-current={istAktiv("/dennis-beichert") ? "page" : undefined}
+                className="block rounded-xl px-3 py-2.5 text-sm font-semibold text-ink hover:bg-white/10 aria-[current=page]:text-accent"
+              >
+                Speaker &amp; Keynotes
               </Link>
               <Link
                 href="/?kontakt=1"

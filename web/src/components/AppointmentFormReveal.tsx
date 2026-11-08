@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { motion } from "motion/react";
+import { kreisRevealUebergang } from "@/lib/motion";
 
 type Slot = { start: string; end: string };
 type LoadState = "loading" | "ready" | "unavailable";
@@ -108,7 +109,7 @@ export default function AppointmentFormReveal({ onClose }: { onClose: () => void
       initial={{ clipPath: "circle(0% at 50% 50%)" }}
       animate={{ clipPath: "circle(150% at 50% 50%)" }}
       exit={{ clipPath: "circle(0% at 50% 50%)" }}
-      transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+      transition={kreisRevealUebergang}
       className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 px-6 backdrop-blur-sm"
     >
       <div className="glass-panel relative max-h-[85vh] w-full max-w-md overflow-y-auto rounded-2xl p-8">

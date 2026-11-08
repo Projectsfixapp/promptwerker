@@ -7,6 +7,7 @@ import FooterZone from "./FooterZone";
 import RoadmapCard from "./RoadmapCard";
 import AuditSection from "./AuditSection";
 import TypewriterHeading from "./TypewriterHeading";
+import SpeakerTeaser from "./SpeakerTeaser";
 
 // three.js + GSAP gehören nicht ins hydrations-kritische Bundle — gleiche
 // Behandlung wie NeuralBackground.
@@ -56,6 +57,9 @@ export default function MainView({
         {visibleTopics.map((topic) => (
           <TopicCard key={topic.id} topic={topic} onOpen={onSelectTopic} />
         ))}
+        <div className="mt-10">
+          <SpeakerTeaser />
+        </div>
       </section>
 
       <MagicRingScene />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { fadeUpStart, fadeUpUebergang, fadeUpZiel, viewportEinmal } from "@/lib/motion";
 
 export default function RoadmapCard({
   onOpenContact,
@@ -23,10 +24,10 @@ export default function RoadmapCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.4 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      initial={fadeUpStart}
+      whileInView={fadeUpZiel}
+      viewport={viewportEinmal}
+      transition={fadeUpUebergang}
       className="glass-panel rounded-3xl p-6 sm:p-8"
     >
       <span className="text-xs font-semibold uppercase tracking-wider text-accent">
