@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import LegalPage, { LegalLink, LegalNote, LegalSection } from "@/components/LegalPage";
-import { anbieter, baseUrl, hoster, mailanbieter } from "@/lib/legal";
+import { anbieter, baseUrl, hoster, mailanbieter, postfachanbieter } from "@/lib/legal";
 
 export const metadata: Metadata = {
   title: "Datenschutzerklärung — promptwerker",
@@ -129,10 +129,13 @@ export default function DatenschutzPage() {
           DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen).
         </p>
         <p>
-          Die Nachricht wird nicht in einer Datenbank gespeichert, sondern per E-Mail an unser
-          Postfach {anbieter.email} zugestellt. Der Versand und das Postfach laufen über die{" "}
-          {mailanbieter.name} ({mailanbieter.anschrift}); die Verarbeitung findet in{" "}
-          {mailanbieter.ort} statt. Wir löschen Ihre Anfrage, sobald sie abschließend bearbeitet
+          Die Nachricht wird nicht in einer Datenbank gespeichert, sondern per E-Mail
+          weitergeleitet. Den Versand übernimmt der Mailserver der {mailanbieter.name}{" "}
+          ({mailanbieter.anschrift}) in {mailanbieter.ort}. Zugestellt wird die Nachricht in unser
+          E-Mail-Postfach bei {postfachanbieter.name}, {postfachanbieter.anschrift}. Dabei kann
+          eine Übermittlung an die Google LLC in den USA erfolgen; sie stützt sich auf den
+          Angemessenheitsbeschluss der EU-Kommission zum EU-US Data Privacy Framework (Art. 45
+          DSGVO). Wir löschen Ihre Anfrage, sobald sie abschließend bearbeitet
           ist und keine gesetzlichen Aufbewahrungspflichten entgegenstehen — bei geschäftlicher
           Korrespondenz können das nach § 257 HGB und § 147 AO sechs bzw. zehn Jahre sein.
         </p>

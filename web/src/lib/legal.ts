@@ -34,7 +34,7 @@ export const baseUrl = `https://${domain}`;
 
 /* Fassungsdatum der Rechtstexte. Bei inhaltlicher Änderung hochsetzen —
    der Stand wird unter jedem Rechtstext ausgegeben. */
-export const rechtsstand = "8. November 2026";
+export const rechtsstand = "9. November 2026";
 
 export const hoster = {
   name: "Hetzner Online GmbH",
@@ -46,6 +46,16 @@ export const mailanbieter = {
   name: "united-domains AG",
   anschrift: "Gautinger Str. 10, 82319 Starnberg, Deutschland",
   ort: "Deutschland",
+} as const;
+
+/* Empfangspostfach der Formularanfragen. Gemessen 09.11.2026 im Container:
+   KONTAKT_EMPFAENGER zeigt auf ein Gmail-Postfach, der Versand laeuft ueber
+   united-domains (SMTP). Aendert sich KONTAKT_EMPFAENGER, diesen Eintrag
+   und Datenschutz Ziffer 5 mitziehen. */
+export const postfachanbieter = {
+  name: "Google Ireland Ltd. (Gmail)",
+  anschrift: "Gordon House, Barrow Street, Dublin 4, Irland",
+  ort: "Irland — Übermittlung in die USA möglich, EU-US Data Privacy Framework",
 } as const;
 
 export type Unterauftragnehmer = {
@@ -69,10 +79,16 @@ export const unterauftragnehmerWebsite: Unterauftragnehmer[] = [
     eu: true,
   },
   {
-    zweck: "E-Mail-Postfach und Versand des Kontaktformulars",
+    zweck: "Versand der Formularanfragen (Mailserver)",
     anbieter: mailanbieter.name,
     ort: mailanbieter.ort,
     eu: true,
+  },
+  {
+    zweck: "E-Mail-Postfach, in dem Formularanfragen eingehen",
+    anbieter: postfachanbieter.name,
+    ort: postfachanbieter.ort,
+    eu: false,
   },
   {
     zweck: "Domainverwaltung",
