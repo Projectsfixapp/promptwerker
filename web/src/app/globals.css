@@ -216,6 +216,10 @@ h3 {
   --sp-ziffer: #98a1ab;
   background: var(--sp-bg);
   color: var(--sp-text);
+  /* Seitlich einfahrende Karten (SeitenEintritt, x ±48 px) ragen vor dem
+     Eintritt über den Rand. clip statt hidden: kein Scroll-Container,
+     position: sticky der Unternavigation bleibt intakt. */
+  overflow-x: clip;
 }
 
 .sp-display {
