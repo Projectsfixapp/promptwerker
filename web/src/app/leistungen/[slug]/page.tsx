@@ -52,7 +52,8 @@ export async function generateMetadata(props: {
   if (!meta) return {};
   const url = `${baseUrl}/leistungen/${meta.id}`;
   return {
-    title: `${meta.title} — promptwerker`,
+    // Suffix "— promptwerker" ergänzt das title.template im Root-Layout.
+    title: meta.title,
     description: meta.short,
     alternates: { canonical: `/leistungen/${meta.id}` },
     openGraph: {
