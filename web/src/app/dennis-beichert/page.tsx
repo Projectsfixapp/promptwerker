@@ -6,6 +6,7 @@ import TypewriterHeading from "@/components/TypewriterHeading";
 import SpeakerAnfrage from "@/components/speaker/SpeakerAnfrage";
 import { Auftritt, BewegungsRahmen, KreisReveal, SeitenEintritt } from "@/components/speaker/Bewegung";
 import { anbieter, baseUrl } from "@/lib/legal";
+import { buch } from "@/lib/buch";
 import { ablauf, buehnenBild, logbuch, projekte, publikumsnutzen, speakerFaq, speakerPfad, talks, workshopBild } from "@/lib/speaker";
 
 /* Speaker-Seite Dennis Beichert — eigene Bühne innerhalb von promptwerker.de.
@@ -63,6 +64,18 @@ const strukturierteDaten = {
       knowsAbout: ["KI-Agenten", "Prozessautomatisierung", "E-Commerce", "Retrieval Augmented Generation", "Wissensgraphen", "KI-Telefonassistenz", "Datenschutz bei KI"],
     },
     {
+      "@type": "Book",
+      "@id": `${url}#buch`,
+      name: buch.titel,
+      alternativeHeadline: buch.untertitel,
+      isbn: buch.isbn.replace(/-/g, ""),
+      bookFormat: "https://schema.org/Paperback",
+      numberOfPages: buch.seiten,
+      inLanguage: "de-DE",
+      image: `${baseUrl}${buch.cover}`,
+      author: { "@id": `${url}#person` },
+    },
+    {
       "@type": "FAQPage",
       "@id": `${url}#faq`,
       mainEntity: speakerFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
@@ -88,6 +101,7 @@ const unterNav = [
   { href: "#praxis", label: "Praxis" },
   { href: "#keynotes", label: "Keynotes" },
   { href: "#ueber-mich", label: "Über mich" },
+  { href: "#buch", label: "Buch" },
   { href: "#anfrage", label: "Anfrage" },
 ];
 
@@ -437,10 +451,86 @@ export default function DennisBeichertPage() {
           </div>
         </section>
 
-        {/* ===== [06] Ablauf + FAQ ===== */}
+        {/* ===== [06] Buch =====
+            Übergangskarte bis zur Listung im BoD-Buchshop, Daten: lib/buch.ts. */}
+        <section id="buch" aria-labelledby="buch-titel" className="border-y border-[color:var(--sp-stroke)] bg-[color:var(--sp-bg-soft)] py-24 scroll-mt-24 lg:py-32">
+          <div className="mx-auto max-w-7xl px-4 sm:px-8">
+            <Abschnittskopf nummer="06" label="Buch" id="buch-titel">
+              Das Buch zum Chaos.
+              <span className="block text-[color:var(--sp-lime)]">{buch.status === "lieferbar" ? "Jetzt im Handel." : "Erscheint in Kürze."}</span>
+            </Abschnittskopf>
+            <div className="mt-14 grid items-start gap-12 lg:grid-cols-12">
+              <Auftritt className="mx-auto w-full max-w-[18rem] lg:col-span-4 lg:col-start-1 lg:max-w-none">
+                <Image
+                  src={buch.cover}
+                  width={buch.coverBreite}
+                  height={buch.coverHoehe}
+                  alt={buch.coverAlt}
+                  sizes="(min-width: 1024px) 28vw, 18rem"
+                  className="h-auto w-full shadow-[0_24px_60px_-20px_rgba(0,0,0,0.6)]"
+                />
+              </Auftritt>
+              <Auftritt className="flex flex-col gap-6 lg:col-span-7 lg:col-start-6">
+                <div>
+                  <h3 className="sp-display text-3xl sm:text-4xl">{buch.titel}</h3>
+                  <p className="mt-2 font-card-body text-lg text-[color:var(--sp-muted)]">{buch.untertitel}</p>
+                </div>
+                <p className="font-body text-xl leading-relaxed text-[color:var(--sp-text)]">{buch.kurztext}</p>
+                <ul className="flex flex-col gap-3">
+                  {buch.punkte.map((p) => (
+                    <li key={p} className="flex gap-3 font-card-body text-base leading-relaxed text-[color:var(--sp-muted)]">
+                      <span aria-hidden="true" className="text-[color:var(--sp-lime)]">→</span>
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+                <p className="font-card-body text-base font-semibold text-[color:var(--sp-text)]">{buch.bonus}</p>
+                <dl className="grid grid-cols-2 gap-x-6 gap-y-3 border-t border-[color:var(--sp-stroke)] pt-6 font-card-body text-sm sm:grid-cols-4">
+                  <div>
+                    <dt className="sp-label text-[color:var(--sp-ziffer)]">Preis</dt>
+                    <dd className="mt-1 text-[color:var(--sp-text)]">{buch.preis}</dd>
+                  </div>
+                  <div>
+                    <dt className="sp-label text-[color:var(--sp-ziffer)]">Umfang</dt>
+                    <dd className="mt-1 text-[color:var(--sp-text)]">{buch.seiten} Seiten</dd>
+                  </div>
+                  <div className="col-span-2">
+                    <dt className="sp-label text-[color:var(--sp-ziffer)]">ISBN</dt>
+                    <dd className="mt-1 text-[color:var(--sp-text)]">{buch.isbn}</dd>
+                  </div>
+                </dl>
+                <div className="flex flex-wrap items-center gap-4">
+                  {buch.shopUrl ? (
+                    <a
+                      href={buch.shopUrl}
+                      target="_blank"
+                      rel="noopener"
+                      className="inline-flex min-h-[44px] items-center bg-[color:var(--sp-lime)] px-6 font-heading text-sm uppercase tracking-wide text-[color:var(--sp-ink-on-lime)]"
+                    >
+                      Im BoD-Buchshop kaufen
+                    </a>
+                  ) : (
+                    <p className="font-card-body text-sm text-[color:var(--sp-muted)]">
+                      {buch.format} bei {buch.verlag}. Bestellbar in jeder Buchhandlung über die ISBN, sobald der Titel gelistet ist.
+                    </p>
+                  )}
+                  <Link
+                    href="#anfrage"
+                    className="inline-flex min-h-[44px] items-center border border-[color:var(--sp-stroke)] px-6 font-heading text-sm uppercase tracking-wide text-[color:var(--sp-text)]"
+                  >
+                    Lesung oder Keynote zum Buch anfragen
+                  </Link>
+                </div>
+                <p className="font-card-body text-xs text-[color:var(--sp-ziffer)]">{buch.kiHinweis}</p>
+              </Auftritt>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== [07] Ablauf + FAQ ===== */}
         <section aria-labelledby="ablauf-titel" className="bg-[color:var(--sp-bg-raised)] py-24 lg:py-32">
           <div className="mx-auto max-w-7xl px-4 sm:px-8">
-            <Abschnittskopf nummer="06" label="Ablauf" id="ablauf-titel">
+            <Abschnittskopf nummer="07" label="Ablauf" id="ablauf-titel">
               Von der Anfrage auf die Bühne.
             </Abschnittskopf>
             <ol className="mt-14 grid gap-px bg-[color:var(--sp-stroke)] sm:grid-cols-2 lg:grid-cols-4">
@@ -474,9 +564,9 @@ export default function DennisBeichertPage() {
           </div>
         </section>
 
-        {/* ===== [07] Anfrage ===== */}
+        {/* ===== [08] Anfrage ===== */}
         <section id="anfrage" aria-labelledby="anfrage-titel" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-24 sm:px-8 lg:py-32">
-          <Abschnittskopf nummer="07" label="Anfrage" id="anfrage-titel">
+          <Abschnittskopf nummer="08" label="Anfrage" id="anfrage-titel">
             Bühne frei?
             <span className="block text-[color:var(--sp-lime)]">Lass uns reden.</span>
           </Abschnittskopf>
